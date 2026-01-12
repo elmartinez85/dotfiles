@@ -109,23 +109,8 @@ else
     print_warning "fzf not found, skipping setup"
 fi
 
-# Step 6: Configure Git user information
-print_step "Step 6: Configuring Git user information"
-
-echo "Please enter your Git configuration:"
-read -p "Git user name: " git_name
-read -p "Git email: " git_email
-
-if [ -n "$git_name" ] && [ -n "$git_email" ]; then
-    git config --global user.name "$git_name"
-    git config --global user.email "$git_email"
-    print_success "Git user configured: $git_name <$git_email>"
-else
-    print_warning "Git user configuration skipped"
-fi
-
-# Step 7: Create symlinks for config files
-print_step "Step 7: Creating symlinks for configuration files"
+# Step 6: Create symlinks for config files
+print_step "Step 6: Creating symlinks for configuration files"
 
 # Symlink .zshrc
 if [ -f "$DOTFILES_DIR/config/.zshrc" ]; then
@@ -134,9 +119,14 @@ else
     print_warning ".zshrc not found in config directory"
 fi
 
-# Symlink .gitconfig
+# Copy .gitconfig (don't symlink to avoid committing personal info)
 if [ -f "$DOTFILES_DIR/config/.gitconfig" ]; then
-    create_symlink "$DOTFILES_DIR/config/.gitconfig" "$HOME/.gitconfig"
+    if [ -f "$HOME/.gitconfig" ]; then
+        print_warning "File exists, creating backup: $HOME/.gitconfig.backup"
+        mv "$HOME/.gitconfig" "$HOME/.gitconfig.backup"
+    fi
+    cp "$DOTFILES_DIR/config/.gitconfig" "$HOME/.gitconfig"
+    print_success "Copied: $HOME/.gitconfig (not symlinked to preserve privacy)"
 else
     print_warning ".gitconfig not found in config directory"
 fi
@@ -149,6 +139,21 @@ else
 fi
 
 print_success "Configuration files symlinked"
+
+# Step 7: Configure Git user information
+print_step "Step 7: Configuring Git user information"
+
+echo "Please enter your Git configuration:"
+read -p "Git user name: " git_name
+read -p "Git email: " git_email
+
+if [ -n "$git_name" ] && [ -n "$git_email" ]; then
+    git config --global user.name "$git_name"
+    git config --global user.email "$git_email"
+    print_success "Git user configured: $git_name <$git_email>"
+else
+    print_warning "Git user configuration skipped"
+fi
 
 # Step 8: Setup NVM
 print_step "Step 8: Setting up NVM"

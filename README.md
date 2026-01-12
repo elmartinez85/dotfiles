@@ -118,17 +118,22 @@ dotfiles/
 
 ## Symlink Strategy
 
-This dotfiles setup uses **symbolic links** instead of copying files. The bootstrap script automatically detects where you cloned the repository and creates symlinks accordingly:
+This dotfiles setup uses **symbolic links** for most configuration files. The bootstrap script automatically detects where you cloned the repository and creates symlinks accordingly:
 
-- `~/.zshrc` → `$DOTFILES/config/.zshrc`
-- `~/.gitconfig` → `$DOTFILES/config/.gitconfig`
+- `~/.zshrc` → `$DOTFILES/config/.zshrc` (symlinked)
+- `~/.gitconfig` ← `$DOTFILES/config/.gitconfig` (copied, not symlinked)
+- `~/.gitignore_global` → `$DOTFILES/config/.gitignore_global` (symlinked)
+
+**Why `.gitconfig` is copied instead of symlinked:**
+- Prevents your personal name and email from being committed to the repository
+- Keeps sensitive information local to your machine
+- The bootstrap script prompts for your info and sets it automatically
 
 **Benefits:**
 - Works from any directory location (no hardcoded paths!)
-- Edit configuration files from anywhere
-- Changes are automatically tracked in your dotfiles repository
-- No need to manually sync or re-run bootstrap
-- Single source of truth for all configurations
+- Edit symlinked configuration files from anywhere
+- Changes to symlinked files are automatically tracked in your dotfiles repository
+- Privacy-first: personal Git info stays local
 - Use `$DOTFILES` environment variable to reference your dotfiles location
 
 ## Customization
