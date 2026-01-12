@@ -54,7 +54,7 @@ create_symlink() {
 print_step "MacBook Pro Setup - Dotfiles Bootstrap"
 
 # Get the dotfiles directory
-DOTFILES_DIR="$HOME/dotfiles"
+DOTFILES_DIR="$HOME/Documents/Repositories/dotfiles"
 
 # Check if we're in the dotfiles directory
 if [ ! -d "$DOTFILES_DIR" ]; then

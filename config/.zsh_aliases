@@ -18,7 +18,8 @@ alias ~="cd ~"
 alias desktop="cd ~/Desktop"
 alias downloads="cd ~/Downloads"
 alias documents="cd ~/Documents"
-alias dotfiles="cd ~/dotfiles"
+alias dotfiles="cd ~/Documents/Repositories/dotfiles"
+alias repos="cd ~/Documents/Repositories"
 
 # ============================================
 # Better ls Commands
@@ -124,8 +125,8 @@ alias du="du -h"
 # ============================================
 
 alias zshrc="codium ~/.zshrc"
-alias aliases="codium ~/dotfiles/config/.zsh_aliases"
-alias functions="codium ~/dotfiles/config/.zsh_functions"
+alias aliases="codium ~/Documents/Repositories/dotfiles/config/.zsh_aliases"
+alias functions="codium ~/Documents/Repositories/dotfiles/config/.zsh_functions"
 alias gitconfig="codium ~/.gitconfig"
 
 # ============================================
@@ -133,7 +134,7 @@ alias gitconfig="codium ~/.gitconfig"
 # ============================================
 
 alias brewup="brew update && brew upgrade && brew cleanup"
-alias brewdump="cd ~/dotfiles && brew bundle dump --force --file=Brewfile"
+alias brewdump="cd ~/Documents/Repositories/dotfiles && brew bundle dump --force --file=Brewfile"
 
 # ============================================
 # Productivity

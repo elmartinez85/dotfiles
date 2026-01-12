@@ -8,8 +8,8 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 
 1. **Clone this repository** to your new Mac:
    ```bash
-   git clone <your-repo-url> ~/dotfiles
-   cd ~/dotfiles
+   git clone <your-repo-url> ~/Documents/Repositories/dotfiles
+   cd ~/Documents/Repositories/dotfiles
    ```
 
 2. **Make scripts executable**:
@@ -112,8 +112,8 @@ dotfiles/
 
 This dotfiles setup uses **symbolic links** instead of copying files. This means:
 
-- `~/.zshrc` → `~/dotfiles/config/.zshrc`
-- `~/.gitconfig` → `~/dotfiles/config/.gitconfig`
+- `~/.zshrc` → `~/Documents/Repositories/dotfiles/config/.zshrc`
+- `~/.gitconfig` → `~/Documents/Repositories/dotfiles/config/.gitconfig`
 
 **Benefits:**
 - Edit configuration files from anywhere
@@ -125,7 +125,7 @@ This dotfiles setup uses **symbolic links** instead of copying files. This means
 
 ### Adding Custom Aliases
 
-Edit `~/dotfiles/config/.zsh_aliases`:
+Edit `~/Documents/Repositories/dotfiles/config/.zsh_aliases`:
 ```bash
 alias ll="ls -lah"
 alias ..="cd .."
@@ -134,7 +134,7 @@ alias gs="git status"
 
 ### Adding Custom Functions
 
-Edit `~/dotfiles/config/.zsh_functions`:
+Edit `~/Documents/Repositories/dotfiles/config/.zsh_functions`:
 ```bash
 mkcd() {
     mkdir -p "$1" && cd "$1"
@@ -143,7 +143,7 @@ mkcd() {
 
 ### Modifying Git Configuration
 
-Edit `~/dotfiles/config/.gitconfig` to change:
+Edit `~/Documents/Repositories/dotfiles/config/.gitconfig` to change:
 - User name and email
 - Git aliases
 - Default editor
@@ -151,7 +151,7 @@ Edit `~/dotfiles/config/.gitconfig` to change:
 
 ### Customizing Spaceship Prompt
 
-Edit the `SPACESHIP_PROMPT_ORDER` section in `~/dotfiles/config/.zshrc` to customize which prompt sections appear and their order.
+Edit the `SPACESHIP_PROMPT_ORDER` section in `~/Documents/Repositories/dotfiles/config/.zshrc` to customize which prompt sections appear and their order.
 
 ## Updating
 
@@ -177,7 +177,7 @@ git pull
 2. Add packages using `brew "package-name"` or `cask "app-name"`
 3. Run:
    ```bash
-   brew bundle --file=~/dotfiles/Brewfile
+   brew bundle --file=~/Documents/Repositories/dotfiles/Brewfile
    ```
 
 ## Useful Commands
@@ -185,7 +185,7 @@ git pull
 ### General
 - `brew update && brew upgrade` - Update all Homebrew packages
 - `omz update` - Update Oh My Zsh
-- `cd ~/dotfiles && git status` - Check for uncommitted dotfile changes
+- `cd ~/Documents/Repositories/dotfiles && git status` - Check for uncommitted dotfile changes
 
 ### fzf Shortcuts
 - `CTRL-R` - Search command history
@@ -214,7 +214,7 @@ The included `.gitconfig` has these useful aliases:
 
 1. **Initialize git repository** (if not already):
    ```bash
-   cd ~/dotfiles
+   cd ~/Documents/Repositories/dotfiles
    git init
    git add .
    git commit -m "Initial dotfiles setup"
@@ -229,7 +229,7 @@ The included `.gitconfig` has these useful aliases:
 
 3. **Keep it updated**:
    ```bash
-   cd ~/dotfiles
+   cd ~/Documents/Repositories/dotfiles
    git add .
    git commit -m "Update configurations"
    git push
@@ -242,7 +242,7 @@ The included `.gitconfig` has these useful aliases:
 Use the uninstall script to remove configurations and test fresh installations:
 
 ```bash
-bash ~/dotfiles/scripts/uninstall.sh
+bash ~/Documents/Repositories/dotfiles/scripts/uninstall.sh
 ```
 
 The script will interactively ask you what to remove:
@@ -254,7 +254,7 @@ The script will interactively ask you what to remove:
 
 **What it keeps:**
 - Homebrew and all installed packages
-- The `~/dotfiles` directory itself
+- The `~/Documents/Repositories/dotfiles` directory itself
 - Any `.backup` files (for safety)
 
 **Quick test cycle:**
@@ -274,7 +274,7 @@ To remove **everything** including Homebrew packages:
 bash scripts/uninstall.sh
 
 # 2. Remove packages from Brewfile
-brew bundle cleanup --file=~/dotfiles/Brewfile --force
+brew bundle cleanup --file=~/Documents/Repositories/dotfiles/Brewfile --force
 
 # 3. (Optional) Completely uninstall Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
@@ -291,7 +291,7 @@ If symlinks fail, check:
 ### Spaceship Theme Not Loading
 1. Check if Oh My Zsh is installed: `ls ~/.oh-my-zsh`
 2. Verify symlink exists: `ls -la ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme`
-3. Re-run: `bash ~/dotfiles/scripts/install_spaceship.sh`
+3. Re-run: `bash ~/Documents/Repositories/dotfiles/scripts/install_spaceship.sh`
 
 ### Homebrew Packages Not Found
 1. Ensure Homebrew is in PATH: `echo $PATH | grep homebrew`
