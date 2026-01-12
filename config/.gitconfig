@@ -1,6 +1,5 @@
 [user]
-	name = Eduardo L. Martinez
-	email = elmartinez85@gmail.com
+	# name and email will be configured during bootstrap
 
 [init]
 	defaultBranch = main

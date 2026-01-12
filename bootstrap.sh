@@ -112,8 +112,23 @@ else
     print_warning "fzf not found, skipping setup"
 fi
 
-# Step 6: Create symlinks for config files
-print_step "Step 6: Creating symlinks for configuration files"
+# Step 6: Configure Git user information
+print_step "Step 6: Configuring Git user information"
+
+echo "Please enter your Git configuration:"
+read -p "Git user name: " git_name
+read -p "Git email: " git_email
+
+if [ -n "$git_name" ] && [ -n "$git_email" ]; then
+    git config --global user.name "$git_name"
+    git config --global user.email "$git_email"
+    print_success "Git user configured: $git_name <$git_email>"
+else
+    print_warning "Git user configuration skipped"
+fi
+
+# Step 7: Create symlinks for config files
+print_step "Step 7: Creating symlinks for configuration files"
 
 # Symlink .zshrc
 if [ -f "$DOTFILES_DIR/config/.zshrc" ]; then
@@ -138,8 +153,8 @@ fi
 
 print_success "Configuration files symlinked"
 
-# Step 7: Setup NVM
-print_step "Step 7: Setting up NVM"
+# Step 8: Setup NVM
+print_step "Step 8: Setting up NVM"
 if [ -d "$(brew --prefix)/opt/nvm" ]; then
     mkdir -p ~/.nvm
     print_success "NVM directory created"
@@ -148,8 +163,8 @@ else
     print_warning "NVM not found"
 fi
 
-# Step 8: Setup pyenv
-print_step "Step 8: Setting up pyenv"
+# Step 9: Setup pyenv
+print_step "Step 9: Setting up pyenv"
 if command -v pyenv &> /dev/null; then
     print_success "pyenv installed and configured"
     print_success "pyenv configuration already included in .zshrc"
@@ -157,8 +172,8 @@ else
     print_warning "pyenv not found"
 fi
 
-# Step 9: Configure macOS settings
-print_step "Step 9: Configuring macOS settings"
+# Step 10: Configure macOS settings
+print_step "Step 10: Configuring macOS settings"
 if ! bash "$DOTFILES_DIR/scripts/configure_macos.sh"; then
     print_error "Failed to configure macOS settings"
     exit 1
