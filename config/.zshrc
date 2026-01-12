@@ -1,3 +1,11 @@
+# Dotfiles directory - auto-detect from symlink location
+if [ -L "$HOME/.zshrc" ]; then
+    export DOTFILES="$(dirname "$(dirname "$(readlink "$HOME/.zshrc")")")"
+else
+    # Fallback to default location if not symlinked
+    export DOTFILES="$HOME/dotfiles"
+fi
+
 # Homebrew PATH (Apple Silicon)
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -73,12 +81,12 @@ fi
 
 # User configuration
 # Load custom aliases
-if [ -f "$HOME/dotfiles/config/.zsh_aliases" ]; then
-    source "$HOME/dotfiles/config/.zsh_aliases"
+if [ -f "$DOTFILES/config/.zsh_aliases" ]; then
+    source "$DOTFILES/config/.zsh_aliases"
 fi
 
 # Load custom functions
-if [ -f "$HOME/dotfiles/config/.zsh_functions" ]; then
-    source "$HOME/dotfiles/config/.zsh_functions"
+if [ -f "$DOTFILES/config/.zsh_functions" ]; then
+    source "$DOTFILES/config/.zsh_functions"
 fi
 

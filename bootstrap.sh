@@ -53,14 +53,11 @@ create_symlink() {
 
 print_step "MacBook Pro Setup - Dotfiles Bootstrap"
 
-# Get the dotfiles directory
-DOTFILES_DIR="$HOME/Documents/Repositories/dotfiles"
+# Get the dotfiles directory (use script's actual location)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$SCRIPT_DIR"
 
-# Check if we're in the dotfiles directory
-if [ ! -d "$DOTFILES_DIR" ]; then
-    print_error "Dotfiles directory not found at $DOTFILES_DIR"
-    exit 1
-fi
+echo "Using dotfiles from: $DOTFILES_DIR"
 
 cd "$DOTFILES_DIR" || exit 1
 
@@ -186,19 +183,23 @@ echo ""
 echo "Configuration Summary:"
 echo "  ✓ Homebrew and packages installed"
 echo "  ✓ Oh My Zsh with Spaceship theme configured"
-echo "  ✓ Configuration files symlinked to dotfiles/"
+echo "  ✓ Configuration files symlinked to $DOTFILES_DIR"
 echo "  ✓ Development tools (git, node, python) configured"
 echo "  ✓ macOS system preferences customized"
 echo ""
+echo "Your dotfiles location: $DOTFILES_DIR"
+echo "Access it anytime with: dotfiles (alias) or \$DOTFILES (variable)"
+echo ""
 echo "Next steps:"
 echo "  1. Restart your terminal or run: source ~/.zshrc"
-echo "  2. Your config files are now symlinked to ~/dotfiles/config/"
+echo "  2. Your config files are now symlinked to $DOTFILES_DIR/config/"
 echo "  3. Any changes to ~/.zshrc or ~/.gitconfig will be tracked in your dotfiles"
-echo "  4. Add custom aliases to ~/dotfiles/config/.zsh_aliases"
-echo "  5. Add custom functions to ~/dotfiles/config/.zsh_functions"
+echo "  4. Add custom aliases using: aliases (opens in editor)"
+echo "  5. Add custom functions using: functions (opens in editor)"
 echo ""
 echo "Useful commands:"
 echo "  • brew update && brew upgrade - Update Homebrew packages"
 echo "  • omz update - Update Oh My Zsh"
-echo "  • cd ~/dotfiles && git status - Check dotfiles changes"
+echo "  • dotfiles - Navigate to your dotfiles directory"
+echo "  • cd \$DOTFILES && git status - Check dotfiles changes"
 echo ""

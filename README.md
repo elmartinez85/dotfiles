@@ -6,9 +6,15 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 
 ### First Time Setup
 
-1. **Clone this repository** to your new Mac:
+1. **Clone this repository** to your new Mac (you can use any directory):
    ```bash
-   git clone <your-repo-url> ~/Documents/Repositories/dotfiles
+   git clone https://github.com/elmartinez85/dotfiles.git ~/dotfiles
+   cd ~/dotfiles
+   ```
+
+   Or use your preferred location:
+   ```bash
+   git clone https://github.com/elmartinez85/dotfiles.git ~/Documents/Repositories/dotfiles
    cd ~/Documents/Repositories/dotfiles
    ```
 
@@ -50,8 +56,10 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 ### Applications (via Homebrew Cask)
 - **1Password** - Password manager
 - **1Password CLI** - Command-line interface for 1Password
+- **Calibre** - E-book library management
 - **Cursor** - AI-powered code editor
 - **Helium Browser** - Floating browser window
+- **Mullvad Browser** - Privacy-focused browser
 - **Obsidian** - Knowledge base and note-taking app
 - **PearCleaner** - Mac cleaning utility
 - **Rectangle Pro** - Window management tool
@@ -110,22 +118,29 @@ dotfiles/
 
 ## Symlink Strategy
 
-This dotfiles setup uses **symbolic links** instead of copying files. This means:
+This dotfiles setup uses **symbolic links** instead of copying files. The bootstrap script automatically detects where you cloned the repository and creates symlinks accordingly:
 
-- `~/.zshrc` → `~/Documents/Repositories/dotfiles/config/.zshrc`
-- `~/.gitconfig` → `~/Documents/Repositories/dotfiles/config/.gitconfig`
+- `~/.zshrc` → `$DOTFILES/config/.zshrc`
+- `~/.gitconfig` → `$DOTFILES/config/.gitconfig`
 
 **Benefits:**
+- Works from any directory location (no hardcoded paths!)
 - Edit configuration files from anywhere
 - Changes are automatically tracked in your dotfiles repository
 - No need to manually sync or re-run bootstrap
 - Single source of truth for all configurations
+- Use `$DOTFILES` environment variable to reference your dotfiles location
 
 ## Customization
 
 ### Adding Custom Aliases
 
-Edit `~/Documents/Repositories/dotfiles/config/.zsh_aliases`:
+Edit using the `aliases` command (opens in your editor), or directly:
+```bash
+codium $DOTFILES/config/.zsh_aliases
+```
+
+Example aliases:
 ```bash
 alias ll="ls -lah"
 alias ..="cd .."
@@ -134,7 +149,12 @@ alias gs="git status"
 
 ### Adding Custom Functions
 
-Edit `~/Documents/Repositories/dotfiles/config/.zsh_functions`:
+Edit using the `functions` command (opens in your editor), or directly:
+```bash
+codium $DOTFILES/config/.zsh_functions
+```
+
+Example function:
 ```bash
 mkcd() {
     mkdir -p "$1" && cd "$1"
@@ -143,15 +163,23 @@ mkcd() {
 
 ### Modifying Git Configuration
 
-Edit `~/Documents/Repositories/dotfiles/config/.gitconfig` to change:
-- User name and email
+Your Git name and email are configured during bootstrap setup (not stored in the repository). To change other Git settings, edit:
+```bash
+codium $DOTFILES/config/.gitconfig
+```
+
+You can modify:
 - Git aliases
 - Default editor
 - Merge/diff tools
+- Other Git preferences
 
 ### Customizing Spaceship Prompt
 
-Edit the `SPACESHIP_PROMPT_ORDER` section in `~/Documents/Repositories/dotfiles/config/.zshrc` to customize which prompt sections appear and their order.
+Edit the `SPACESHIP_PROMPT_ORDER` section in your `.zshrc`:
+```bash
+zshrc  # opens ~/.zshrc in editor
+```
 
 ## Updating
 
@@ -173,19 +201,29 @@ git pull
 ```
 
 ### Add New Homebrew Packages
-1. Edit the `Brewfile`
+1. Edit the `Brewfile`:
+   ```bash
+   codium $DOTFILES/Brewfile
+   ```
 2. Add packages using `brew "package-name"` or `cask "app-name"`
 3. Run:
    ```bash
-   brew bundle --file=~/Documents/Repositories/dotfiles/Brewfile
+   brew bundle --file=$DOTFILES/Brewfile
+   ```
+   Or use the convenient alias:
+   ```bash
+   brewdump  # Updates Brewfile with currently installed packages
    ```
 
 ## Useful Commands
 
 ### General
-- `brew update && brew upgrade` - Update all Homebrew packages
+- `brewup` - Update all Homebrew packages (alias for brew update && brew upgrade && brew cleanup)
 - `omz update` - Update Oh My Zsh
-- `cd ~/Documents/Repositories/dotfiles && git status` - Check for uncommitted dotfile changes
+- `dotfiles` - Navigate to your dotfiles directory
+- `cd $DOTFILES && git status` - Check for uncommitted dotfile changes
+- `aliases` - Edit your custom aliases
+- `functions` - Edit your custom functions
 
 ### fzf Shortcuts
 - `CTRL-R` - Search command history
@@ -212,28 +250,22 @@ The included `.gitconfig` has these useful aliases:
 
 ## Backing Up to GitHub
 
-1. **Initialize git repository** (if not already):
-   ```bash
-   cd ~/Documents/Repositories/dotfiles
-   git init
-   git add .
-   git commit -m "Initial dotfiles setup"
-   ```
+This repository is already set up for GitHub! To keep your changes synced:
 
-2. **Create a repository on GitHub** and push:
-   ```bash
-   git remote add origin <your-repo-url>
-   git branch -M main
-   git push -u origin main
-   ```
+```bash
+dotfiles           # Navigate to dotfiles directory
+git add .
+git commit -m "Update configurations"
+git push
+```
 
-3. **Keep it updated**:
-   ```bash
-   cd ~/Documents/Repositories/dotfiles
-   git add .
-   git commit -m "Update configurations"
-   git push
-   ```
+Or use the convenient workflow:
+```bash
+cd $DOTFILES && git status  # Check what changed
+git add .                    # Stage changes
+git commit -m "Your message" # Commit
+git push                     # Push to GitHub
+```
 
 ## Testing & Development
 
@@ -242,7 +274,7 @@ The included `.gitconfig` has these useful aliases:
 Use the uninstall script to remove configurations and test fresh installations:
 
 ```bash
-bash ~/Documents/Repositories/dotfiles/scripts/uninstall.sh
+bash $DOTFILES/scripts/uninstall.sh
 ```
 
 The script will interactively ask you what to remove:
@@ -254,11 +286,12 @@ The script will interactively ask you what to remove:
 
 **What it keeps:**
 - Homebrew and all installed packages
-- The `~/Documents/Repositories/dotfiles` directory itself
+- Your dotfiles directory
 - Any `.backup` files (for safety)
 
 **Quick test cycle:**
 ```bash
+dotfiles                    # Navigate to dotfiles
 ./bootstrap.sh              # Install
 # ... test your setup ...
 bash scripts/uninstall.sh   # Clean up
@@ -274,7 +307,7 @@ To remove **everything** including Homebrew packages:
 bash scripts/uninstall.sh
 
 # 2. Remove packages from Brewfile
-brew bundle cleanup --file=~/Documents/Repositories/dotfiles/Brewfile --force
+brew bundle cleanup --file=$DOTFILES/Brewfile --force
 
 # 3. (Optional) Completely uninstall Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
@@ -291,7 +324,7 @@ If symlinks fail, check:
 ### Spaceship Theme Not Loading
 1. Check if Oh My Zsh is installed: `ls ~/.oh-my-zsh`
 2. Verify symlink exists: `ls -la ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme`
-3. Re-run: `bash ~/Documents/Repositories/dotfiles/scripts/install_spaceship.sh`
+3. Re-run: `bash $DOTFILES/scripts/install_spaceship.sh`
 
 ### Homebrew Packages Not Found
 1. Ensure Homebrew is in PATH: `echo $PATH | grep homebrew`
