@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Backup files created by bootstrap
+*.backup
+
+# Claude Code directory (optional - uncomment if you don't want to track)
+# .claude/
+
+# Temporary files
+*.tmp
+*.log

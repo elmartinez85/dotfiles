@@ -1,0 +1,156 @@
+# ============================================
+# Custom Aliases
+# ============================================
+# These aliases are automatically loaded by .zshrc
+# Edit this file to add your own custom shortcuts
+
+# ============================================
+# Navigation & Directory Shortcuts
+# ============================================
+
+# Quick directory navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+
+# Quick access to common directories
+alias desktop="cd ~/Desktop"
+alias downloads="cd ~/Downloads"
+alias documents="cd ~/Documents"
+alias dotfiles="cd ~/dotfiles"
+
+# ============================================
+# Better ls Commands
+# ============================================
+
+alias ls="ls -G"           # Colorize output
+alias ll="ls -lah"         # Long format, all files, human-readable sizes
+alias la="ls -A"           # Show hidden files
+alias l="ls -CF"           # List in columns with file type indicators
+alias lt="ls -ltrh"        # Sort by modification time, newest last
+alias lsize="ls -lSrh"     # Sort by size, largest last
+
+# ============================================
+# Git Shortcuts
+# ============================================
+
+# Basic commands
+alias g="git"
+alias gs="git status"
+alias ga="git add"
+alias gaa="git add --all"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gp="git push"
+alias gpl="git pull"
+alias gl="git log --oneline --graph --decorate"
+
+# Branch management
+alias gb="git branch"
+alias gco="git checkout"
+alias gcb="git checkout -b"
+
+# Other useful git aliases
+alias gd="git diff"
+alias gdc="git diff --cached"
+alias gst="git stash"
+alias gstp="git stash pop"
+alias greset="git reset --hard HEAD"
+
+# ============================================
+# Safety & Confirmation
+# ============================================
+
+# Confirm before overwriting
+alias cp="cp -i"
+alias mv="mv -i"
+alias rm="rm -i"
+
+# ============================================
+# macOS Specific
+# ============================================
+
+# Show/hide hidden files in Finder
+alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+# Flush DNS cache
+alias flushdns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
+
+# Get IP addresses
+alias myip="curl -s ifconfig.me"
+alias localip="ipconfig getifaddr en0"
+
+# ============================================
+# Development Tools
+# ============================================
+
+# Python
+alias python="python3"
+alias pip="pip3"
+
+# Node/NPM
+alias npmi="npm install"
+alias npms="npm start"
+alias npmt="npm test"
+alias npmr="npm run"
+
+# Quick HTTP server
+alias serve="python3 -m http.server 8000"
+
+# Docker shortcuts (if you use Docker)
+alias d="docker"
+alias dc="docker-compose"
+alias dps="docker ps"
+alias dimg="docker images"
+
+# ============================================
+# Utilities
+# ============================================
+
+# Use bat instead of cat (better syntax highlighting)
+alias cat="bat"
+
+# Better find with fzf
+alias preview="fzf --preview 'bat --color=always {}'"
+
+# Disk usage
+alias disk="df -h"
+alias du="du -h"
+
+# ============================================
+# Quick File Edits
+# ============================================
+
+alias zshrc="codium ~/.zshrc"
+alias aliases="codium ~/dotfiles/config/.zsh_aliases"
+alias functions="codium ~/dotfiles/config/.zsh_functions"
+alias gitconfig="codium ~/.gitconfig"
+
+# ============================================
+# Homebrew Shortcuts
+# ============================================
+
+alias brewup="brew update && brew upgrade && brew cleanup"
+alias brewdump="cd ~/dotfiles && brew bundle dump --force --file=Brewfile"
+
+# ============================================
+# Productivity
+# ============================================
+
+# Clear screen
+alias c="clear"
+alias cls="clear"
+
+# Date and time utilities
+alias week="date +%V"
+alias now="date +%Y-%m-%d\ %H:%M:%S"
+alias timestamp="date +%s"
+
+# ============================================
+# Oh My Zsh
+# ============================================
+
+# Reload shell (use omz reload instead of source ~/.zshrc)
+alias refresh="omz reload"

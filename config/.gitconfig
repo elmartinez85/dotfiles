@@ -1,0 +1,51 @@
+[user]
+	name = Eduardo L. Martinez
+	email = elmartinez85@gmail.com
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = codium --wait
+	autocrlf = input
+	excludesfile = ~/.gitignore_global
+
+[pull]
+	rebase = false
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[diff]
+	colorMoved = zebra
+
+[merge]
+	conflictstyle = diff3
+
+[alias]
+	# Short commands
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -1 HEAD
+
+	# Pretty log
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+	# Show branches sorted by last modified
+	recent = branch --sort=-committerdate
+
+	# Undo last commit but keep changes
+	undo = reset --soft HEAD^
+
+[color]
+	ui = auto
+
+[credential]
+	helper = osxkeychain
