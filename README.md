@@ -58,11 +58,13 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 - **1Password CLI** - Command-line interface for 1Password
 - **Calibre** - E-book library management
 - **Cursor** - AI-powered code editor
+- **Discord** - Voice, video, and text communication platform
 - **Helium Browser** - Floating browser window
 - **Mullvad Browser** - Privacy-focused browser
 - **Obsidian** - Knowledge base and note-taking app
 - **PearCleaner** - Mac cleaning utility
 - **Rectangle Pro** - Window management tool
+- **Slack** - Team collaboration and messaging
 - **VSCodium** - VS Code without telemetry
 
 ### Shell Configuration
