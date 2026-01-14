@@ -26,11 +26,13 @@ cask "1password"
 cask "1password-cli"
 cask "calibre"
 cask "cursor"
+cask "discord"
 cask "helium-browser"
 cask "mullvad-browser"
 cask "obsidian"
 cask "pearcleaner"
 cask "rectangle-pro"
+cask "slack"
 cask "vscodium"
 
 # Fonts
