@@ -102,20 +102,24 @@ The bootstrap script automatically configures:
 
 ```
 dotfiles/
-├── bootstrap.sh                 # Main setup script with symlink strategy
-├── Brewfile                     # Homebrew package definitions
-├── README.md                    # This file
+├── bootstrap.sh                     # Main setup script with symlink strategy
+├── Brewfile                         # Homebrew package definitions
+├── README.md                        # This file
 ├── config/
-│   ├── .gitconfig              # Git configuration (symlinked to ~/.gitconfig)
-│   ├── .zshrc                  # Zsh configuration (symlinked to ~/.zshrc)
-│   ├── .zsh_aliases            # Custom aliases
-│   └── .zsh_functions          # Custom functions
+│   ├── .gitconfig                  # Git configuration (copied to ~/.gitconfig)
+│   ├── .gitignore_global           # Global git ignores (symlinked)
+│   ├── .zshrc                      # Zsh configuration (symlinked to ~/.zshrc)
+│   ├── .zsh_aliases                # Custom aliases
+│   ├── .zsh_functions              # Custom functions
+│   ├── ssh_config                  # SSH configuration (symlinked to ~/.ssh/config)
+│   ├── vscodium-settings.json      # VSCodium settings (symlinked)
+│   └── cursor-settings.json        # Cursor settings (symlinked)
 └── scripts/
-    ├── configure_macos.sh      # macOS system preferences
-    ├── install_homebrew.sh     # Homebrew installation
-    ├── install_ohmyzsh.sh      # Oh My Zsh installation
-    ├── install_spaceship.sh    # Spaceship theme installation
-    └── uninstall.sh            # Uninstall script for testing
+    ├── configure_macos.sh          # macOS system preferences
+    ├── install_homebrew.sh         # Homebrew installation
+    ├── install_ohmyzsh.sh          # Oh My Zsh installation
+    ├── install_spaceship.sh        # Spaceship theme installation
+    └── uninstall.sh                # Uninstall script for testing
 ```
 
 ## Symlink Strategy
@@ -125,6 +129,9 @@ This dotfiles setup uses **symbolic links** for most configuration files. The bo
 - `~/.zshrc` → `$DOTFILES/config/.zshrc` (symlinked)
 - `~/.gitconfig` ← `$DOTFILES/config/.gitconfig` (copied, not symlinked)
 - `~/.gitignore_global` → `$DOTFILES/config/.gitignore_global` (symlinked)
+- `~/.ssh/config` → `$DOTFILES/config/ssh_config` (symlinked)
+- `~/Library/Application Support/VSCodium/User/settings.json` → `$DOTFILES/config/vscodium-settings.json` (symlinked)
+- `~/Library/Application Support/Cursor/User/settings.json` → `$DOTFILES/config/cursor-settings.json` (symlinked)
 
 **Why `.gitconfig` is copied instead of symlinked:**
 - Prevents your personal name and email from being committed to the repository
@@ -137,6 +144,8 @@ This dotfiles setup uses **symbolic links** for most configuration files. The bo
 - Changes to symlinked files are automatically tracked in your dotfiles repository
 - Privacy-first: personal Git info stays local
 - Use `$DOTFILES` environment variable to reference your dotfiles location
+- SSH config with 1Password integration for secure key management
+- Editor settings synced across machines
 
 ## Customization
 
@@ -355,6 +364,11 @@ If symlinks fail, check:
 - ✅ Fuzzy finding with fzf
 - ✅ Smart autosuggestions and syntax highlighting
 - ✅ Git configuration with useful aliases
+- ✅ SSH configuration with 1Password integration
+- ✅ VSCodium and Cursor settings sync
+- ✅ Enhanced shell history management (50k commands, deduplication)
+- ✅ Post-install validation
+- ✅ Error recovery with cleanup guidance
 - ✅ Modular and extensible design
 - ✅ Comprehensive error handling
 - ✅ Easy to version control and backup

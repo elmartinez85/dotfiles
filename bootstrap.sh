@@ -11,6 +11,24 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Cleanup on error
+cleanup_on_error() {
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo ""
+        print_error "Installation failed with exit code $exit_code"
+        print_warning "Your system may be in an incomplete state"
+        echo ""
+        echo "To clean up and try again:"
+        echo "  1. Review the error messages above"
+        echo "  2. Run: bash $DOTFILES_DIR/scripts/uninstall.sh"
+        echo "  3. Fix any issues and re-run: ./bootstrap.sh"
+        echo ""
+    fi
+}
+
+trap cleanup_on_error EXIT
+
 # Helper functions
 print_error() {
     echo -e "${RED}✗ Error: $1${NC}"
@@ -138,6 +156,44 @@ else
     print_warning ".gitignore_global not found in config directory"
 fi
 
+# Setup SSH configuration
+if [ -f "$DOTFILES_DIR/config/ssh_config" ]; then
+    # Create .ssh directory if it doesn't exist
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+
+    # Create sockets directory for SSH connection reuse
+    mkdir -p "$HOME/.ssh/sockets"
+
+    # Symlink SSH config
+    create_symlink "$DOTFILES_DIR/config/ssh_config" "$HOME/.ssh/config"
+    chmod 600 "$HOME/.ssh/config"
+else
+    print_warning "ssh_config not found in config directory"
+fi
+
+# Setup VSCodium settings
+if [ -f "$DOTFILES_DIR/config/vscodium-settings.json" ]; then
+    VSCODIUM_USER_DIR="$HOME/Library/Application Support/VSCodium/User"
+    if [ -d "$VSCODIUM_USER_DIR" ]; then
+        create_symlink "$DOTFILES_DIR/config/vscodium-settings.json" "$VSCODIUM_USER_DIR/settings.json"
+        print_success "VSCodium settings symlinked"
+    else
+        print_warning "VSCodium not found, skipping settings sync"
+    fi
+fi
+
+# Setup Cursor settings
+if [ -f "$DOTFILES_DIR/config/cursor-settings.json" ]; then
+    CURSOR_USER_DIR="$HOME/Library/Application Support/Cursor/User"
+    if [ -d "$CURSOR_USER_DIR" ]; then
+        create_symlink "$DOTFILES_DIR/config/cursor-settings.json" "$CURSOR_USER_DIR/settings.json"
+        print_success "Cursor settings symlinked"
+    else
+        print_warning "Cursor not found, skipping settings sync"
+    fi
+fi
+
 print_success "Configuration files symlinked"
 
 # Step 7: Configure Git user information
@@ -181,6 +237,44 @@ if ! bash "$DOTFILES_DIR/scripts/configure_macos.sh"; then
     exit 1
 fi
 print_success "macOS configuration complete"
+
+# Step 11: Validate installation
+print_step "Step 11: Validating Installation"
+validation_failed=0
+
+# Check critical tools
+if ! command -v brew &> /dev/null; then
+    print_error "Homebrew not found"
+    validation_failed=1
+else
+    print_success "Homebrew installed"
+fi
+
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    print_error "Oh My Zsh not found"
+    validation_failed=1
+else
+    print_success "Oh My Zsh installed"
+fi
+
+if [ ! -L "$HOME/.zshrc" ]; then
+    print_warning ".zshrc not symlinked"
+else
+    print_success ".zshrc symlinked"
+fi
+
+# Check optional tools
+command -v fzf &> /dev/null && print_success "fzf installed" || print_warning "fzf not found"
+command -v git &> /dev/null && print_success "git installed" || print_warning "git not found"
+command -v nvm &> /dev/null && print_success "nvm installed" || print_warning "nvm not found"
+command -v pyenv &> /dev/null && print_success "pyenv installed" || print_warning "pyenv not found"
+
+if [ $validation_failed -eq 1 ]; then
+    print_error "Installation validation failed. Please review errors above."
+    exit 1
+fi
+
+print_success "Installation validation complete"
 
 # Final message
 print_step "Setup Complete!"

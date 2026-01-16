@@ -6,6 +6,17 @@ else
     export DOTFILES="$HOME/dotfiles"
 fi
 
+# Shell history configuration
+HISTSIZE=50000                    # Number of commands to keep in memory
+SAVEHIST=50000                    # Number of commands to save to file
+HISTFILE=~/.zsh_history           # History file location
+setopt HIST_IGNORE_ALL_DUPS       # Remove older duplicates from history
+setopt HIST_FIND_NO_DUPS          # Don't show duplicates when searching
+setopt HIST_SAVE_NO_DUPS          # Don't save duplicates to file
+setopt INC_APPEND_HISTORY         # Append to history immediately
+setopt SHARE_HISTORY              # Share history across all sessions
+setopt EXTENDED_HISTORY           # Save timestamp and duration
+
 # Homebrew PATH (Apple Silicon)
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -62,9 +73,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # pyenv configuration
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+if command -v pyenv >/dev/null 2>&1; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+fi
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
