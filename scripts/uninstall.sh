@@ -62,7 +62,7 @@ print_step "Dotfiles Uninstall Script"
 echo "This script will:"
 echo "  • Remove symlinks created by bootstrap.sh"
 echo "  • Restore any .backup files"
-echo "  • Optionally remove Oh My Zsh and Spaceship theme"
+echo "  • Optionally remove Oh My Zsh"
 echo "  • Optionally reset macOS settings to defaults"
 echo ""
 echo "This will NOT:"
@@ -84,7 +84,7 @@ remove_symlink "$HOME/.gitignore_global"
 
 # Ask about Oh My Zsh
 echo ""
-read -p "Remove Oh My Zsh and Spaceship theme? (y/N): " -n 1 -r
+read -p "Remove Oh My Zsh? (y/N): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     if [ -d "$HOME/.oh-my-zsh" ]; then

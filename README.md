@@ -302,7 +302,7 @@ bash $DOTFILES/scripts/uninstall.sh
 
 The script will interactively ask you what to remove:
 - Symlinks (`~/.zshrc`, `~/.gitconfig`) - automatically removed
-- Oh My Zsh and Spaceship theme - optional
+- Oh My Zsh - optional
 - NVM directory - optional
 - fzf configuration - optional
 - macOS settings reset to defaults - optional
@@ -344,10 +344,10 @@ If symlinks fail, check:
 2. You have write permissions to your home directory
 3. Re-run bootstrap: `./bootstrap.sh`
 
-### Spaceship Theme Not Loading
-1. Check if Oh My Zsh is installed: `ls ~/.oh-my-zsh`
-2. Verify symlink exists: `ls -la ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme`
-3. Re-run: `bash $DOTFILES/scripts/install_spaceship.sh`
+### Starship Prompt Not Loading
+1. Check if Starship is installed: `starship --version`
+2. Verify configuration exists: `ls -la ~/.config/starship.toml`
+3. Re-install: `brew install starship` and re-run `./bootstrap.sh`
 
 ### Homebrew Packages Not Found
 1. Ensure Homebrew is in PATH: `echo $PATH | grep homebrew`
