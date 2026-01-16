@@ -25,28 +25,8 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load
-# Using Spaceship theme - install with: git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
-# Then symlink: ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
-ZSH_THEME="spaceship"
-
-# Spaceship prompt configuration
-SPACESHIP_PROMPT_ORDER=(
-  user          # Username section
-  dir           # Current directory section
-  host          # Hostname section
-  git           # Git section (git_branch + git_status)
-  node          # Node.js section
-  python        # Python section
-  exec_time     # Execution time
-  line_sep      # Line break
-  jobs          # Background jobs indicator
-  exit_code     # Exit code section
-  char          # Prompt character
-)
-SPACESHIP_PROMPT_ADD_NEWLINE=true
-SPACESHIP_CHAR_SYMBOL="❯"
-SPACESHIP_CHAR_SUFFIX=" "
+# Disable Oh My Zsh theme (using Starship instead)
+ZSH_THEME=""
 
 # Oh My Zsh plugins
 # Standard plugins can be found in $ZSH/plugins/
@@ -103,3 +83,6 @@ if [ -f "$DOTFILES/config/.zsh_functions" ]; then
     source "$DOTFILES/config/.zsh_functions"
 fi
 
+# Initialize Starship prompt
+# Configuration file: ~/.config/starship.toml (symlinked from $DOTFILES/config/starship.toml)
+eval "$(starship init zsh)"

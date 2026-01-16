@@ -15,6 +15,7 @@ brew "openssh"
 brew "python@3.14"
 brew "pyenv"
 brew "ripgrep"
+brew "starship"  # Fast, customizable shell prompt
 brew "tree"
 brew "wget"
 brew "zsh-autosuggestions"

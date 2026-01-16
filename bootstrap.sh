@@ -108,13 +108,22 @@ if ! bash "$DOTFILES_DIR/scripts/install_ohmyzsh.sh"; then
 fi
 print_success "Oh My Zsh installation complete"
 
-# Step 4: Install Spaceship theme
-print_step "Step 4: Installing Spaceship theme"
-if ! bash "$DOTFILES_DIR/scripts/install_spaceship.sh"; then
-    print_error "Failed to install Spaceship theme"
-    exit 1
+# Step 4: Setup Starship prompt
+print_step "Step 4: Setting up Starship prompt"
+if command -v starship &> /dev/null; then
+    # Create .config directory if it doesn't exist
+    mkdir -p "$HOME/.config"
+
+    # Symlink Starship config
+    if [ -f "$DOTFILES_DIR/config/starship.toml" ]; then
+        create_symlink "$DOTFILES_DIR/config/starship.toml" "$HOME/.config/starship.toml"
+        print_success "Starship configuration symlinked"
+    else
+        print_warning "starship.toml not found in config directory"
+    fi
+else
+    print_warning "Starship not installed, skipping configuration"
 fi
-print_success "Spaceship theme installation complete"
 
 # Step 5: Setup fzf
 print_step "Step 5: Setting up fzf"

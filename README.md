@@ -69,7 +69,7 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 
 ### Shell Configuration
 - **Oh My Zsh** - Framework for managing zsh configuration
-- **Spaceship Prompt** - Minimal, powerful, and customizable prompt
+- **Starship** - Fast, customizable, cross-shell prompt written in Rust
 - **Custom plugins** - git, brew, macos, node, npm, nvm, python, pip, pyenv, vscode, z
 
 ### macOS System Preferences
@@ -112,13 +112,13 @@ dotfiles/
 │   ├── .zsh_aliases                # Custom aliases
 │   ├── .zsh_functions              # Custom functions
 │   ├── ssh_config                  # SSH configuration (symlinked to ~/.ssh/config)
+│   ├── starship.toml               # Starship prompt configuration (symlinked to ~/.config/starship.toml)
 │   ├── vscodium-settings.json      # VSCodium settings (symlinked)
 │   └── cursor-settings.json        # Cursor settings (symlinked)
 └── scripts/
     ├── configure_macos.sh          # macOS system preferences
     ├── install_homebrew.sh         # Homebrew installation
     ├── install_ohmyzsh.sh          # Oh My Zsh installation
-    ├── install_spaceship.sh        # Spaceship theme installation
     └── uninstall.sh                # Uninstall script for testing
 ```
 
@@ -130,6 +130,7 @@ This dotfiles setup uses **symbolic links** for most configuration files. The bo
 - `~/.gitconfig` ← `$DOTFILES/config/.gitconfig` (copied, not symlinked)
 - `~/.gitignore_global` → `$DOTFILES/config/.gitignore_global` (symlinked)
 - `~/.ssh/config` → `$DOTFILES/config/ssh_config` (symlinked)
+- `~/.config/starship.toml` → `$DOTFILES/config/starship.toml` (symlinked)
 - `~/Library/Application Support/VSCodium/User/settings.json` → `$DOTFILES/config/vscodium-settings.json` (symlinked)
 - `~/Library/Application Support/Cursor/User/settings.json` → `$DOTFILES/config/cursor-settings.json` (symlinked)
 
@@ -190,12 +191,18 @@ You can modify:
 - Merge/diff tools
 - Other Git preferences
 
-### Customizing Spaceship Prompt
+### Customizing Starship Prompt
 
-Edit the `SPACESHIP_PROMPT_ORDER` section in your `.zshrc`:
+Edit the Starship configuration file:
 ```bash
-zshrc  # opens ~/.zshrc in editor
+codium $DOTFILES/config/starship.toml
 ```
+
+See [Starship documentation](https://starship.rs/config/) for all configuration options. You can customize:
+- Prompt symbols and colors
+- Git status display
+- Language version indicators
+- Custom modules and formats
 
 ## Updating
 
@@ -210,10 +217,10 @@ brew upgrade
 omz update
 ```
 
-### Update Spaceship Theme
+### Update Starship
+Starship is updated via Homebrew:
 ```bash
-cd $ZSH_CUSTOM/themes/spaceship-prompt
-git pull
+brew upgrade starship
 ```
 
 ### Add New Homebrew Packages
@@ -360,7 +367,7 @@ If symlinks fail, check:
 - ✅ Automated installation of development tools
 - ✅ Symlinked configuration (automatic sync)
 - ✅ Custom macOS system preferences
-- ✅ Beautiful Spaceship prompt with Git integration
+- ✅ Blazing-fast Starship prompt with Git integration
 - ✅ Fuzzy finding with fzf
 - ✅ Smart autosuggestions and syntax highlighting
 - ✅ Git configuration with useful aliases
