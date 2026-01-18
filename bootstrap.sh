@@ -181,7 +181,7 @@ else
     print_warning "ssh_config not found in config directory"
 fi
 
-# Setup VSCodium settings
+# Setup VSCodium settings and extensions
 if [ -f "$DOTFILES_DIR/config/vscodium-settings.json" ]; then
     VSCODIUM_USER_DIR="$HOME/Library/Application Support/VSCodium/User"
     if [ -d "$VSCODIUM_USER_DIR" ]; then
@@ -190,6 +190,22 @@ if [ -f "$DOTFILES_DIR/config/vscodium-settings.json" ]; then
     else
         print_warning "VSCodium not found, skipping settings sync"
     fi
+fi
+
+# Install VSCodium extensions
+if command -v codium &> /dev/null; then
+    if [ -f "$DOTFILES_DIR/config/vscodium-extensions.txt" ]; then
+        print_success "Installing VSCodium extensions..."
+        while IFS= read -r extension || [ -n "$extension" ]; do
+            # Skip empty lines and comments
+            [[ -z "$extension" || "$extension" =~ ^# ]] && continue
+            codium --install-extension "$extension" --force 2>/dev/null && \
+                print_success "Installed: $extension" || \
+                print_warning "Failed to install: $extension"
+        done < "$DOTFILES_DIR/config/vscodium-extensions.txt"
+    fi
+else
+    print_warning "VSCodium CLI not found, skipping extension installation"
 fi
 
 # Setup Cursor settings

@@ -1,0 +1,14 @@
+# VSCodium Extensions
+# Install with: codium --install-extension <extension-id>
+
+# AI
+anthropic.claude-code
+
+# Formatting
+esbenp.prettier-vscode
+
+# Python
+ms-python.python
+
+# Git
+eamodio.gitlens
