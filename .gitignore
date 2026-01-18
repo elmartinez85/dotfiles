@@ -14,3 +14,6 @@ Icon
 # Temporary files
 *.tmp
 *.log
+
+# Local SSH config (not tracked)
+config/ssh_config.local

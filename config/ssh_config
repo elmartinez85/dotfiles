@@ -1,6 +1,9 @@
 # SSH Configuration
 # This file will be symlinked to ~/.ssh/config
 
+# Include local hosts (not tracked in git)
+Include ~/.ssh/config.local
+
 # Global settings
 Host *
     # Use SSH keys from 1Password
