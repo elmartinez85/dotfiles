@@ -37,7 +37,6 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 ## What Gets Installed
 
 ### CLI Tools (via Homebrew)
-- **chezmoi** - Dotfiles manager
 - **curl** - Data transfer tool
 - **ffmpeg** - Multimedia framework
 - **fzf** - Fuzzy finder for command-line
@@ -69,7 +68,8 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 
 ### Shell Configuration
 - **Oh My Zsh** - Framework for managing zsh configuration
-- **Starship** - Fast, customizable, cross-shell prompt written in Rust
+- **Starship** - Fast, customizable, cross-shell prompt with powerline-style theme
+- **1Password SSH Agent** - Secure SSH key management via 1Password
 - **Custom plugins** - git, brew, macos, node, npm, nvm, python, pip, pyenv, vscode, z
 
 ### macOS System Preferences
@@ -108,12 +108,14 @@ dotfiles/
 ├── config/
 │   ├── .gitconfig                  # Git configuration (copied to ~/.gitconfig)
 │   ├── .gitignore_global           # Global git ignores (symlinked)
-│   ├── .zshrc                      # Zsh configuration (symlinked to ~/.zshrc)
+│   ├── .zshrc                      # Zsh configuration with 1Password SSH agent (symlinked to ~/.zshrc)
 │   ├── .zsh_aliases                # Custom aliases
 │   ├── .zsh_functions              # Custom functions
 │   ├── ssh_config                  # SSH configuration (symlinked to ~/.ssh/config)
-│   ├── starship.toml               # Starship prompt configuration (symlinked to ~/.config/starship.toml)
+│   ├── ssh_config.local.example    # Example local SSH hosts (not symlinked)
+│   ├── starship.toml               # Starship powerline prompt configuration (symlinked to ~/.config/starship.toml)
 │   ├── vscodium-settings.json      # VSCodium settings (symlinked)
+│   ├── vscodium-extensions.txt     # VSCodium extensions to auto-install
 │   └── cursor-settings.json        # Cursor settings (symlinked)
 └── scripts/
     ├── configure_macos.sh          # macOS system preferences
@@ -146,6 +148,8 @@ This dotfiles setup uses **symbolic links** for most configuration files. The bo
 - Privacy-first: personal Git info stays local
 - Use `$DOTFILES` environment variable to reference your dotfiles location
 - SSH config with 1Password integration for secure key management
+- Local SSH hosts in `~/.ssh/config.local` (gitignored, for private servers)
+- VSCodium extensions automatically installed via `codium` CLI
 - Editor settings synced across machines
 
 ## Customization
@@ -203,6 +207,42 @@ See [Starship documentation](https://starship.rs/config/) for all configuration 
 - Git status display
 - Language version indicators
 - Custom modules and formats
+
+### Adding Private SSH Hosts
+
+The SSH config uses 1Password for secure key management and supports local host definitions:
+
+1. **Edit your local SSH hosts** (gitignored, won't be committed):
+   ```bash
+   codium ~/.ssh/config.local
+   ```
+
+2. **Add a host**:
+   ```
+   Host myserver
+       HostName 192.168.1.100
+       User yourusername
+   ```
+
+3. **Connect**:
+   ```bash
+   ssh myserver
+   ```
+
+**How it works:**
+- `~/.ssh/config` is symlinked to `$DOTFILES/config/ssh_config` (tracked in git)
+- `~/.ssh/config` includes `~/.ssh/config.local` (gitignored, private)
+- SSH keys are managed by 1Password agent via `SSH_AUTH_SOCK` environment variable
+- All tools (git, rsync, scp) use 1Password keys automatically
+
+**To add a public key to a remote server:**
+```bash
+# Show your public keys from 1Password
+ssh-add -L
+
+# Copy a key to remote server
+ssh-copy-id user@hostname
+```
 
 ## Updating
 
@@ -367,12 +407,14 @@ If symlinks fail, check:
 - ✅ Automated installation of development tools
 - ✅ Symlinked configuration (automatic sync)
 - ✅ Custom macOS system preferences
-- ✅ Blazing-fast Starship prompt with Git integration
+- ✅ Blazing-fast Starship powerline prompt with Git integration
 - ✅ Fuzzy finding with fzf
 - ✅ Smart autosuggestions and syntax highlighting
 - ✅ Git configuration with useful aliases
-- ✅ SSH configuration with 1Password integration
+- ✅ SSH configuration with 1Password agent integration
+- ✅ Local SSH hosts support (gitignored for privacy)
 - ✅ VSCodium and Cursor settings sync
+- ✅ Automatic VSCodium extension installation
 - ✅ Enhanced shell history management (50k commands, deduplication)
 - ✅ Post-install validation
 - ✅ Error recovery with cleanup guidance
