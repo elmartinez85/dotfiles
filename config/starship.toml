@@ -1,248 +1,151 @@
-# Starship Prompt Configuration
-# https://starship.rs/config/
+"$schema" = 'https://starship.rs/config-schema.json'
 
-# Minimal, powerful prompt similar to Spaceship theme
-
-# Add newline before prompt
-add_newline = true
-
-# Timeout for starship to execute commands (in milliseconds)
-command_timeout = 1000
-
-# Format of the prompt
 format = """
+[](#9A348E)\
+$os\
 $username\
-$hostname\
+[](bg:#DA627D fg:#9A348E)\
 $directory\
+[](fg:#DA627D bg:#FCA17D)\
 $git_branch\
-$git_commit\
-$git_state\
-$git_metrics\
 $git_status\
-$package\
-$nodejs\
-$python\
-$rust\
+[](fg:#FCA17D bg:#86BBD8)\
+$c\
+$elixir\
+$elm\
 $golang\
+$gradle\
+$haskell\
+$java\
+$julia\
+$nodejs\
+$nim\
+$rust\
+$scala\
+[](fg:#86BBD8 bg:#06969A)\
 $docker_context\
-$kubernetes\
-$aws\
-$gcloud\
-$terraform\
-$battery\
+[](fg:#06969A bg:#33658A)\
 $time\
-$line_break\
-$jobs\
-$status\
-$character"""
+[ ](fg:#33658A)\
+"""
 
-# Character
-[character]
-success_symbol = "[➜](bold green)"
-error_symbol = "[➜](bold red)"
-vimcmd_symbol = "[❮](bold green)"
+# Disable the blank line at the start of the prompt
+# add_newline = false
 
-# Username
+# You can also replace your username with a neat symbol like   or disable this
+# and use the os module below
 [username]
-show_always = false
-format = "[$user]($style) "
-style_user = "bold yellow"
-style_root = "bold red"
+show_always = true
+style_user = "bg:#9A348E"
+style_root = "bg:#9A348E"
+format = '[$user ]($style)'
+disabled = false
 
-# Hostname
-[hostname]
-ssh_only = true
-format = "on [$hostname]($style) "
-style = "bold dimmed green"
+# An alternative to the username module which displays a symbol that
+# represents the current operating system
+[os]
+style = "bg:#9A348E"
+disabled = true # Disabled by default
 
-# Directory
 [directory]
+style = "bg:#DA627D"
+format = "[ $path ]($style)"
 truncation_length = 3
-truncate_to_repo = true
-format = "[$path]($style)[$read_only]($read_only_style) "
-style = "bold cyan"
-read_only = " 🔒"
-read_only_style = "red"
 truncation_symbol = "…/"
 
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
 [directory.substitutions]
 "Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = " 󰈙 "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important 󰈙 " = " 󰈙 "
 
-# Git Branch
-[git_branch]
-symbol = " "
-format = "on [$symbol$branch(:$remote_branch)]($style) "
-style = "bold purple"
-truncation_length = 20
-truncation_symbol = "…"
+[c]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Git Commit
-[git_commit]
-commit_hash_length = 7
-tag_symbol = " 🏷  "
-format = "[\\($hash$tag\\)]($style) "
-style = "bold green"
-only_detached = true
+[cpp]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Git State
-[git_state]
-rebase = "rebasing"
-merge = "merging"
-revert = "reverting"
-cherry_pick = "cherry-picking"
-bisect = "bisecting"
-am = "am'ing"
-am_or_rebase = "am/rebase"
-format = "\\([$state( $progress_current/$progress_total)]($style)\\) "
-style = "bright-black"
-
-# Git Status
-[git_status]
-format = "([\\[$all_status$ahead_behind\\]]($style) )"
-style = "bold red"
-conflicted = "🏳 "
-ahead = "⇡${count} "
-behind = "⇣${count} "
-diverged = "⇕⇡${ahead_count}⇣${behind_count} "
-up_to_date = ""
-untracked = "?${count} "
-stashed = "📦 "
-modified = "!${count} "
-staged = "+${count} "
-renamed = "»${count} "
-deleted = "✘${count} "
-
-# Git Metrics
-[git_metrics]
-disabled = false
-added_style = "bold green"
-deleted_style = "bold red"
-format = "[+$added]($added_style)/[-$deleted]($deleted_style) "
-
-# Package Version
-[package]
-symbol = "📦 "
-format = "[$symbol$version]($style) "
-style = "208 bold"
-display_private = false
-
-# Node.js
-[nodejs]
-symbol = " "
-format = "[$symbol($version )]($style)"
-style = "bold green"
-detect_extensions = ["js", "mjs", "cjs", "ts"]
-detect_files = ["package.json", ".node-version", ".nvmrc"]
-detect_folders = ["node_modules"]
-
-# Python
-[python]
-symbol = " "
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-style = "yellow bold"
-pyenv_version_name = true
-pyenv_prefix = "pyenv "
-python_binary = ["python3", "python"]
-detect_extensions = ["py"]
-detect_files = [".python-version", "Pipfile", "requirements.txt", "pyproject.toml"]
-
-# Rust
-[rust]
-symbol = " "
-format = "[$symbol($version )]($style)"
-style = "bold red"
-
-# Go
-[golang]
-symbol = " "
-format = "[$symbol($version )]($style)"
-style = "bold cyan"
-
-# Docker
 [docker_context]
-symbol = " "
-format = "[$symbol$context]($style) "
-style = "blue bold"
-only_with_files = true
+symbol = " "
+style = "bg:#06969A"
+format = '[ $symbol $context ]($style)'
 
-# Kubernetes
-[kubernetes]
-symbol = "☸ "
-format = '[$symbol$context( \($namespace\))]($style) '
-style = "cyan bold"
-disabled = false
+[elixir]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-[kubernetes.context_aliases]
-"dev.local.cluster.k8s" = "dev"
+[elm]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# AWS
-[aws]
-symbol = "  "
-format = '[$symbol($profile )(\($region\) )(\[$duration\] )]($style)'
-style = "bold yellow"
+[git_branch]
+symbol = ""
+style = "bg:#FCA17D"
+format = '[ $symbol $branch ]($style)'
 
-# Google Cloud
-[gcloud]
-symbol = "☁️  "
-format = '[$symbol$account(@$domain)(\($region\))]($style) '
-style = "bold blue"
+[git_status]
+style = "bg:#FCA17D"
+format = '[$all_status$ahead_behind ]($style)'
 
-# Terraform
-[terraform]
-symbol = "💠 "
-format = "[$symbol$workspace]($style) "
-style = "bold 105"
+[golang]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Battery
-[battery]
-full_symbol = "🔋"
-charging_symbol = "⚡"
-discharging_symbol = "💀"
-unknown_symbol = "❓"
-empty_symbol = "🪫"
+[gradle]
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-[[battery.display]]
-threshold = 10
-style = "bold red"
+[haskell]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-[[battery.display]]
-threshold = 30
-style = "bold yellow"
+[java]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Time
+[julia]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[nim]
+symbol = "󰆥 "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[scala]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
 [time]
 disabled = false
-format = "🕙[$time]($style) "
-style = "bold white"
-time_format = "%T"
-utc_time_offset = "local"
-
-# Jobs
-[jobs]
-symbol = "✦"
-number_threshold = 1
-symbol_threshold = 1
-format = "[$symbol$number]($style) "
-style = "bold blue"
-
-# Status
-[status]
-disabled = false
-format = "[$symbol$status]($style) "
-symbol = "✖ "
-style = "bold red"
-
-# Line Break
-[line_break]
-disabled = false
-
-# Command Duration
-[cmd_duration]
-min_time = 500
-format = "took [$duration]($style) "
-style = "bold yellow"
-show_milliseconds = false
-show_notifications = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#33658A"
+format = '[ ♥ $time ]($style)'
