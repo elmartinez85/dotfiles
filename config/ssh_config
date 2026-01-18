@@ -15,10 +15,6 @@ Host *
     ControlPath ~/.ssh/sockets/%r@%h-%p
     ControlPersist 600
 
-    # Security settings
-    AddKeysToAgent yes
-    UseKeychain yes
-
     # Disable weak algorithms
     HostKeyAlgorithms ssh-ed25519,rsa-sha2-512,rsa-sha2-256
 
@@ -26,13 +22,11 @@ Host *
 Host github.com
     HostName github.com
     User git
-    IdentitiesOnly yes
 
 # GitLab configuration
 Host gitlab.com
     HostName gitlab.com
     User git
-    IdentitiesOnly yes
 
 # Example server configuration (uncomment and modify as needed)
 # Host myserver

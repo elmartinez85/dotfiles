@@ -59,6 +59,9 @@ if command -v pyenv >/dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
 
+# 1Password SSH agent
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
