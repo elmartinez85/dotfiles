@@ -62,7 +62,8 @@ A comprehensive collection of dotfiles and scripts to quickly set up a new MacBo
 - **Mullvad Browser** - Privacy-focused browser
 - **Obsidian** - Knowledge base and note-taking app
 - **PearCleaner** - Mac cleaning utility
-- **Rectangle Pro** - Window management tool
+- **Rectangle** - Window management tool
+- **AeroSpace** - i3-inspired tiling window manager for macOS
 - **Slack** - Team collaboration and messaging
 - **VSCodium** - VS Code without telemetry
 
@@ -114,6 +115,7 @@ dotfiles/
 │   ├── ssh_config                  # SSH configuration (symlinked to ~/.ssh/config)
 │   ├── ssh_config.local.example    # Example local SSH hosts (not symlinked)
 │   ├── starship.toml               # Starship powerline prompt configuration (symlinked to ~/.config/starship.toml)
+│   ├── aerospace.toml              # AeroSpace window manager configuration (symlinked to ~/.aerospace.toml)
 │   ├── vscodium-settings.json      # VSCodium settings (symlinked)
 │   ├── vscodium-extensions.txt     # VSCodium extensions to auto-install
 │   └── cursor-settings.json        # Cursor settings (symlinked)
@@ -133,6 +135,7 @@ This dotfiles setup uses **symbolic links** for most configuration files. The bo
 - `~/.gitignore_global` → `$DOTFILES/config/.gitignore_global` (symlinked)
 - `~/.ssh/config` → `$DOTFILES/config/ssh_config` (symlinked)
 - `~/.config/starship.toml` → `$DOTFILES/config/starship.toml` (symlinked)
+- `~/.aerospace.toml` → `$DOTFILES/config/aerospace.toml` (symlinked)
 - `~/Library/Application Support/VSCodium/User/settings.json` → `$DOTFILES/config/vscodium-settings.json` (symlinked)
 - `~/Library/Application Support/Cursor/User/settings.json` → `$DOTFILES/config/cursor-settings.json` (symlinked)
 
@@ -207,6 +210,52 @@ See [Starship documentation](https://starship.rs/config/) for all configuration 
 - Git status display
 - Language version indicators
 - Custom modules and formats
+
+### Customizing AeroSpace Window Manager
+
+Edit the AeroSpace configuration file:
+```bash
+codium $DOTFILES/config/aerospace.toml
+```
+
+**Essential Keybindings (defaults):**
+
+**Focus windows:**
+- `Alt + h/j/k/l` - Move focus left/down/up/right (Vim-style)
+
+**Move windows:**
+- `Alt + Shift + h/j/k/l` - Move window left/down/up/right
+
+**Switch workspaces:**
+- `Alt + 1/2/3...` - Switch to workspace 1, 2, 3, etc.
+
+**Move window to workspace:**
+- `Alt + Shift + 1/2/3...` - Move window to workspace
+
+**Layouts:**
+- `Alt + f` - Toggle fullscreen
+- `Alt + s` - Vertical split
+- `Alt + w` - Horizontal split
+- `Alt + e` - Default tiling layout
+- `Alt + Shift + Space` - Toggle floating/tiling
+
+**Resize mode:**
+- `Alt + r` - Enter resize mode
+  - Then use `h/j/k/l` to resize
+  - Press `Enter` or `Esc` to exit resize mode
+
+**Other:**
+- `Alt + Shift + b` - Balance window sizes
+- `Alt + Shift + c` - Reload configuration
+- `Alt + Shift + q` - Close window
+
+**Tips:**
+- Start with 3-5 workspaces and adjust based on your workflow
+- Assign specific apps to workspaces (uncomment examples in config)
+- Adjust gaps in the config file for tighter/looser window spacing
+- Consider changing the main modifier from `alt` to `cmd` if needed
+
+See [AeroSpace documentation](https://github.com/nikitabobko/AeroSpace) for advanced configuration.
 
 ### Adding Private SSH Hosts
 

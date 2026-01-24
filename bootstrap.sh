@@ -125,6 +125,20 @@ else
     print_warning "Starship not installed, skipping configuration"
 fi
 
+# Step 4.5: Setup AeroSpace window manager
+print_step "Step 4.5: Setting up AeroSpace"
+if [ -d "/Applications/AeroSpace.app" ]; then
+    # Symlink AeroSpace config
+    if [ -f "$DOTFILES_DIR/config/aerospace.toml" ]; then
+        create_symlink "$DOTFILES_DIR/config/aerospace.toml" "$HOME/.aerospace.toml"
+        print_success "AeroSpace configuration symlinked"
+    else
+        print_warning "aerospace.toml not found in config directory"
+    fi
+else
+    print_warning "AeroSpace not installed, skipping configuration"
+fi
+
 # Step 5: Setup fzf
 print_step "Step 5: Setting up fzf"
 if command -v fzf &> /dev/null; then

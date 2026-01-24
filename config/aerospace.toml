@@ -1,0 +1,127 @@
+# AeroSpace Configuration
+# Place this file at: ~/.aerospace.toml
+# Documentation: https://github.com/nikitabobko/AeroSpace
+
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Mouse follows focus when you switch between windows
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Visual focus indicators using JankyBorders
+# JankyBorders draws colored borders around the focused window
+# Color format: 0xAARRGGBB (alpha, red, green, blue in hexadecimal)
+after-startup-command = [
+    'exec-and-forget borders active_color=0xffFFB86C inactive_color=0xff44475A width=4.0'
+]
+
+# Gaps between windows (outer-left, outer-right, outer-top, outer-bottom, inner-vertical, inner-horizontal)
+[gaps]
+inner.horizontal = 8
+inner.vertical =   8
+outer.left =       8
+outer.bottom =     8
+outer.top =        8
+outer.right =      8
+
+# Main modifier key - Using Hyper key (Caps Lock)
+# Hyper = Cmd+Alt+Ctrl+Shift (configured via Karabiner-Elements)
+[mode.main.binding]
+
+# Focus windows using Vim-style navigation (Caps Lock + h/j/k/l)
+cmd-alt-ctrl-shift-h = 'focus left'
+cmd-alt-ctrl-shift-j = 'focus down'
+cmd-alt-ctrl-shift-k = 'focus up'
+cmd-alt-ctrl-shift-l = 'focus right'
+
+# Move windows (Caps Lock + arrow keys for easier pressing)
+cmd-alt-ctrl-shift-left = 'move left'
+cmd-alt-ctrl-shift-down = 'move down'
+cmd-alt-ctrl-shift-up = 'move up'
+cmd-alt-ctrl-shift-right = 'move right'
+
+# Switch between workspaces (Caps Lock + number)
+cmd-alt-ctrl-shift-1 = 'workspace 1'
+cmd-alt-ctrl-shift-2 = 'workspace 2'
+cmd-alt-ctrl-shift-3 = 'workspace 3'
+cmd-alt-ctrl-shift-4 = 'workspace 4'
+cmd-alt-ctrl-shift-5 = 'workspace 5'
+cmd-alt-ctrl-shift-6 = 'workspace 6'
+cmd-alt-ctrl-shift-7 = 'workspace 7'
+cmd-alt-ctrl-shift-8 = 'workspace 8'
+cmd-alt-ctrl-shift-9 = 'workspace 9'
+
+# Move window to workspace (Caps Lock + m, then number - using a sequence approach)
+# For now, using Caps Lock + letter keys a-i to avoid conflicts
+cmd-alt-ctrl-shift-a = 'move-node-to-workspace 1'
+cmd-alt-ctrl-shift-z = 'move-node-to-workspace 2'
+cmd-alt-ctrl-shift-x = 'move-node-to-workspace 3'
+cmd-alt-ctrl-shift-v = 'move-node-to-workspace 4'
+cmd-alt-ctrl-shift-n = 'move-node-to-workspace 5'
+cmd-alt-ctrl-shift-m = 'move-node-to-workspace 6'
+cmd-alt-ctrl-shift-comma = 'move-node-to-workspace 7'
+cmd-alt-ctrl-shift-period = 'move-node-to-workspace 8'
+cmd-alt-ctrl-shift-slash = 'move-node-to-workspace 9'
+
+# Layout management (Caps Lock + letter)
+cmd-alt-ctrl-shift-f = 'fullscreen'
+cmd-alt-ctrl-shift-s = 'layout v_accordion'  # Vertical split
+cmd-alt-ctrl-shift-w = 'layout h_accordion'  # Horizontal split
+cmd-alt-ctrl-shift-e = 'layout tiles horizontal vertical'  # Default tiling
+
+# Toggle between floating and tiling mode (Caps Lock + Space)
+cmd-alt-ctrl-shift-space = 'layout floating tiling'
+
+# Force windows to tile properly (Caps Lock + t)
+cmd-alt-ctrl-shift-t = 'exec-and-forget /Users/elmartinez85/Documents/Repositories/dotfiles/scripts/aerospace-tile-all.sh'  # Force ALL windows to tile
+
+# Join windows into the tiling tree (Caps Lock + Ctrl + direction)
+# These are advanced, keeping Alt+Ctrl for now since they rarely conflict
+alt-ctrl-h = 'join-with left'
+alt-ctrl-j = 'join-with down'
+alt-ctrl-k = 'join-with up'
+alt-ctrl-l = 'join-with right'
+
+# Resize mode (Caps Lock + r)
+cmd-alt-ctrl-shift-r = 'mode resize'
+
+# Balance windows (Caps Lock + b)
+cmd-alt-ctrl-shift-b = 'balance-sizes'
+
+# Reload config (Caps Lock + c)
+cmd-alt-ctrl-shift-c = 'reload-config'
+
+# Close window (Caps Lock + q)
+cmd-alt-ctrl-shift-q = 'close'
+
+# Move workspace to different monitor (Caps Lock + , or .)
+# Using comma/period since brackets have syntax issues
+cmd-alt-ctrl-shift-semicolon = 'move-workspace-to-monitor --wrap-around prev'
+cmd-alt-ctrl-shift-quote = 'move-workspace-to-monitor --wrap-around next'
+
+# Resize mode bindings
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+enter = 'mode main'
+esc = 'mode main'
+
+# Application-specific workspace assignments (optional)
+# Uncomment and customize as needed
+# [[on-window-detected]]
+# if.app-id = 'com.google.Chrome'
+# run = 'move-node-to-workspace 1'
+
+# [[on-window-detected]]
+# if.app-id = 'com.microsoft.VSCode'
+# run = 'move-node-to-workspace 2'
+
+# [[on-window-detected]]
+# if.app-id = 'com.tinyspeck.slackmacgap'
+# run = 'move-node-to-workspace 3'

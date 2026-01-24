@@ -5,6 +5,8 @@
 brew "bat"
 brew "chezmoi"
 brew "curl"
+brew "eza"  # Modern replacement for ls with icons and git integration
+brew "fd"  # Modern replacement for find (fast, user-friendly)
 brew "ffmpeg"
 brew "fzf"
 brew "gh"
@@ -16,6 +18,7 @@ brew "python@3.14"
 brew "pyenv"
 brew "ripgrep"
 brew "starship"  # Fast, customizable shell prompt
+brew "tlrc"  # Fast tldr client (quick command examples)
 brew "tree"
 brew "wget"
 brew "zsh-autosuggestions"
@@ -24,6 +27,11 @@ brew "zsh-syntax-highlighting"
 # Cask Applications
 cask "1password"
 cask "1password-cli"
+cask "aerospace"
+
+# Taps for specialized formulae
+tap "FelixKratz/formulae"
+brew "borders"  # JankyBorders - visual focus indicators for AeroSpace
 cask "calibre"
 cask "cursor"
 cask "discord"
@@ -31,7 +39,7 @@ cask "helium-browser"
 cask "mullvad-browser"
 cask "obsidian"
 cask "pearcleaner"
-cask "rectangle-pro"
+cask "rectangle"
 cask "slack"
 cask "vscodium"
 

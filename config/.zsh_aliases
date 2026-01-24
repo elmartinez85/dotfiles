@@ -22,15 +22,27 @@ alias dotfiles="cd $DOTFILES"
 alias repos="cd ~/Documents/Repositories"
 
 # ============================================
-# Better ls Commands
+# Better ls Commands (using eza)
 # ============================================
 
-alias ls="ls -G"           # Colorize output
-alias ll="ls -lah"         # Long format, all files, human-readable sizes
-alias la="ls -A"           # Show hidden files
-alias l="ls -CF"           # List in columns with file type indicators
-alias lt="ls -ltrh"        # Sort by modification time, newest last
-alias lsize="ls -lSrh"     # Sort by size, largest last
+# Basic listing
+alias ls="eza --icons --group-directories-first"
+alias ll="eza --long --header --icons --group-directories-first --git"
+alias la="eza --long --all --header --icons --group-directories-first --git"
+alias l="eza --icons --group-directories-first"
+
+# Tree views
+alias lt="eza --tree --level=2 --icons"
+alias lt3="eza --tree --level=3 --icons"
+alias lta="eza --tree --level=2 --all --icons"
+
+# Sorting options
+alias lm="eza --long --sort=modified --reverse --icons --git"  # Sort by modified time
+alias lsize="eza --long --sort=size --reverse --icons --git"   # Sort by size
+alias lext="eza --long --sort=extension --icons --git"         # Sort by extension
+
+# Git-aware listing (shows git status in long format)
+alias lg="eza --long --git --icons --group-directories-first"
 
 # ============================================
 # Git Shortcuts
@@ -113,8 +125,13 @@ alias dimg="docker images"
 # Use bat instead of cat (better syntax highlighting)
 alias cat="bat"
 
-# Better find with fzf
+# Quick command examples with tldr (tlrc package provides 'tldr' command)
+alias help="tldr"
+
+# Better find with fd and fzf
 alias preview="fzf --preview 'bat --color=always {}'"
+alias fif="fd --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always {}'"  # Find in files
+alias fid="fd --type d --hidden --follow --exclude .git | fzf --preview 'eza --tree --level=2 --icons {}'"  # Find directories
 
 # Disk usage
 alias disk="df -h"

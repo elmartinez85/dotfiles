@@ -15,7 +15,13 @@
       "Bash(gh auth:*)",
       "Bash(tree:*)",
       "Bash(git config:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(aerospace list-workspaces:*)",
+      "Bash(aerospace list-windows:*)",
+      "Bash(aerospace list-monitors:*)",
+      "Bash(aerospace:*)",
+      "Bash(/Users/elmartinez85/Documents/Repositories/dotfiles/scripts/aerospace-tile-all.sh:*)",
+      "Bash(defaults read:*)"
     ]
   }
 }

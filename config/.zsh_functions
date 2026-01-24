@@ -117,14 +117,22 @@ pingweb() {
 # File Search & Content
 # ============================================
 
-# Find files by name
+# Find files by name (using fd command if available, otherwise find)
 ff() {
-    find . -type f -iname "*$1*"
+    if command -v fd &> /dev/null; then
+        command fd --type f "$1"
+    else
+        find . -type f -iname "*$1*"
+    fi
 }
 
-# Find directories by name
-fd() {
-    find . -type d -iname "*$1*"
+# Find directories by name (renamed to avoid conflict with fd command)
+fdir() {
+    if command -v fd &> /dev/null; then
+        command fd --type d "$1"
+    else
+        find . -type d -iname "*$1*"
+    fi
 }
 
 # Search for text in files (using ripgrep if available, otherwise grep)

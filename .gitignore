@@ -17,3 +17,6 @@ Icon
 
 # Local SSH config (not tracked)
 config/ssh_config.local
+
+# Environment secrets (API keys, tokens, etc.)
+.env_secrets
