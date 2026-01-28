@@ -1,0 +1,41 @@
+# Espanso Base Matches
+# Common text expansions for all profiles
+
+matches:
+  # Basic text expansions
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - trigger: ":time"
+    replace: "{{mytime}}"
+    vars:
+      - name: mytime
+        type: date
+        params:
+          format: "%H:%M:%S"
+
+  - trigger: ":now"
+    replace: "{{mydatetime}}"
+    vars:
+      - name: mydatetime
+        type: date
+        params:
+          format: "%Y-%m-%d %H:%M:%S"
+
+  # Common programming snippets
+  - trigger: ":shrug"
+    replace: "¯\\_(ツ)_/¯"
+
+  - trigger: ":check"
+    replace: "✓"
+
+  - trigger: ":cross"
+    replace: "✗"
+
+  # Email signature placeholders (customize in profile-specific files)
+  # Work-specific expansions go in profiles/work/espanso/match/work.yml

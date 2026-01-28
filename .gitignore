@@ -20,3 +20,12 @@ config/ssh_config.local
 
 # Environment secrets (API keys, tokens, etc.)
 .env_secrets
+
+# Generated/merged files (created by bootstrap)
+Brewfile
+.profile_active
+config/aerospace.toml
+
+# AWS configs (credentials should never be committed)
+.aws/credentials
+.aws/config

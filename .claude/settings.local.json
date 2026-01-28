@@ -21,7 +21,15 @@
       "Bash(aerospace list-monitors:*)",
       "Bash(aerospace:*)",
       "Bash(/Users/elmartinez85/Documents/Repositories/dotfiles/scripts/aerospace-tile-all.sh:*)",
-      "Bash(defaults read:*)"
+      "Bash(defaults read:*)",
+      "Read(//Applications/**)",
+      "Bash(mdls:*)",
+      "Bash(paste:*)",
+      "Bash(for app in \"Cursor\" \"Slack\" \"Discord\" \"Obsidian\" \"Mullvad Browser\")",
+      "Bash(do echo \"=== $app ===\")",
+      "Bash(done)",
+      "Bash(rm:*)",
+      "Bash(cat:*)"
     ]
   }
 }

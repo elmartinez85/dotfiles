@@ -1,0 +1,12 @@
+# Brewfile.additions (Work Profile)
+# These packages are added to base/Brewfile.base for work machines
+
+# Work Applications
+cask "espanso"
+cask "firefox@developer-edition"
+cask "google-chrome"
+
+# Work-specific tools (uncomment if needed)
+# cask "docker"
+# cask "postman"
+# cask "microsoft-teams"

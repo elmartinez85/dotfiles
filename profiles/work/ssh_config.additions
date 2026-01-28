@@ -1,0 +1,25 @@
+# Work SSH Hosts
+# This file is included in SSH config when using work profile
+
+# Work GitHub (if using GitHub Enterprise)
+# Host github.company.com
+# 	HostName github.company.com
+# 	User git
+# 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# Regular GitHub with work identity
+Host github.com
+	HostName github.com
+	User git
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# Work servers (examples - customize as needed)
+# Host work-bastion
+# 	HostName bastion.company.com
+# 	User your-work-username
+# 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# AWS EC2 instances (examples)
+# Host *.compute.amazonaws.com
+# 	User ec2-user
+# 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

@@ -1,0 +1,49 @@
+# Personal Profile - AeroSpace App Shortcuts
+# These are appended to base/aerospace-base.toml
+
+# ============================================
+# PERSONAL APP SHORTCUTS
+# ============================================
+
+[mode.main.binding]
+
+# Browsers
+alt-b = 'exec-and-forget open -a /Applications/Mullvad\ Browser.app'
+alt-shift-b = 'exec-and-forget open -a /Applications/Safari.app'
+
+# Code editors
+alt-c = 'exec-and-forget open -a /Applications/Cursor.app'
+
+# Communication
+alt-d = 'exec-and-forget open -a /Applications/Discord.app'
+
+# Note-taking
+alt-o = 'exec-and-forget open -a /Applications/Obsidian.app'
+
+# ============================================
+# PERSONAL WORKSPACE AUTO-ASSIGNMENTS
+# ============================================
+
+# Workspace 1: Browsers
+[[on-window-detected]]
+if.app-id = 'org.mozilla.mullvadbrowser'
+run = ['move-node-to-workspace 1']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = ['move-node-to-workspace 1']
+
+# Workspace 2: Code Editors (Cursor)
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92'
+run = ['move-node-to-workspace 2']
+
+# Workspace 4: Notes
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = ['move-node-to-workspace 4']
+
+# Workspace 5: Communication (Discord)
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = ['move-node-to-workspace 5']

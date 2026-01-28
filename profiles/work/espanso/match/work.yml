@@ -1,0 +1,27 @@
+# Work-Specific Espanso Matches
+# Text expansions for work environment only
+
+matches:
+  # Work email signature
+  - trigger: ":sig"
+    replace: |
+      Best regards,
+      Eduardo Martinez
+      Your Title
+      Company Name
+      email@company.com
+
+  # Common work phrases
+  - trigger: ":meeting"
+    replace: "Thanks for taking the time to meet with me."
+
+  - trigger: ":followup"
+    replace: "Following up on our previous conversation..."
+
+  # Work-specific snippets (add your own below)
+  # - trigger: ":ticket"
+  #   replace: "JIRA-{{clipboard}}"
+
+  # AWS snippets (if you use AWS at work)
+  # - trigger: ":awsaccount"
+  #   replace: "123456789012"  # Your AWS account ID

@@ -1,0 +1,31 @@
+# Work Profile - AeroSpace App Shortcuts
+# These are appended to base/aerospace-base.toml
+
+# ============================================
+# WORK APP SHORTCUTS
+# ============================================
+
+[mode.main.binding]
+
+# Browsers
+alt-b = 'exec-and-forget open -a /Applications/Firefox\ Developer\ Edition.app'
+alt-shift-b = 'exec-and-forget open -a /Applications/Google\ Chrome.app'
+
+# Text expansion
+alt-e = 'exec-and-forget open -a /Applications/Espanso.app'
+
+# ============================================
+# WORK WORKSPACE AUTO-ASSIGNMENTS
+# ============================================
+
+# Workspace 1: Browsers
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefoxdeveloperedition'
+run = ['move-node-to-workspace 1']
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = ['move-node-to-workspace 1']
+
+# Note: Cursor, Discord, Mullvad, and Obsidian are not installed in work profile
+# VSCodium and Slack auto-assignments are in base config

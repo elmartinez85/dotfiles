@@ -1,0 +1,14 @@
+# Personal SSH Hosts
+# This file is included in SSH config when using personal profile
+
+# Personal GitHub
+Host github.com
+	HostName github.com
+	User git
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# Personal servers (examples - customize as needed)
+# Host personal-server
+# 	HostName your-server.example.com
+# 	User your-username
+# 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

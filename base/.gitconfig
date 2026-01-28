@@ -1,6 +1,3 @@
-[user]
-	# name and email will be configured during bootstrap
-
 [init]
 	defaultBranch = main
 
@@ -48,3 +45,7 @@
 
 [credential]
 	helper = osxkeychain
+
+# Include profile-specific user configuration (name, email, etc.)
+[include]
+	path = ~/.gitconfig.profile

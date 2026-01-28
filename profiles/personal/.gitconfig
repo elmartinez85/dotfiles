@@ -1,0 +1,11 @@
+# Personal Git Configuration
+# This file is symlinked to ~/.gitconfig.profile when using personal profile
+
+[user]
+	name = Eduardo Martinez
+	email = your-personal@email.com  # CHANGE THIS to your actual personal email
+	# signingkey = YOUR_GPG_KEY_IF_YOU_USE_GPG
+
+# Personal-specific settings (if any)
+# [url "git@github.com:your-personal-username/"]
+# 	insteadOf = https://github.com/your-personal-username/

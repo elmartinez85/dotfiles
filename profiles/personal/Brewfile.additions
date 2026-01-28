@@ -1,0 +1,10 @@
+# Brewfile.additions (Personal Profile)
+# These packages are added to base/Brewfile.base for personal machines
+
+# Personal Applications
+cask "calibre"
+cask "cursor"
+cask "discord"
+cask "helium-browser"
+cask "mullvad-browser"
+cask "obsidian"

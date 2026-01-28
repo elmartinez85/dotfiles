@@ -1,0 +1,20 @@
+# Espanso Base Configuration
+# This file contains shared settings for all profiles
+# Profile-specific matches go in profiles/work/espanso/match/
+
+# Basic settings
+toggle_key: ALT
+search_shortcut: ALT+SPACE
+search_trigger: ":esp"
+
+# Backend settings (for macOS)
+backend: Clipboard
+
+# Preserve clipboard after paste
+preserve_clipboard: true
+
+# Enable/disable suggestions
+show_notifications: true
+
+# Auto-restart on configuration changes
+auto_restart: true
