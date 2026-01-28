@@ -4,18 +4,19 @@
 # ============================================
 # PERSONAL APP SHORTCUTS
 # ============================================
-
-[mode.main.binding]
+# Note: These bindings continue the [mode.main.binding] section from base config
+# Do NOT include [mode.main.binding] header here - TOML doesn't allow redefinition
 
 # Browsers
-alt-b = 'exec-and-forget open -a /Applications/Mullvad\ Browser.app'
+alt-b = 'exec-and-forget open -a /Applications/Helium.app'
 alt-shift-b = 'exec-and-forget open -a /Applications/Safari.app'
 
 # Code editors
-alt-c = 'exec-and-forget open -a /Applications/Cursor.app'
+alt-c = 'exec-and-forget open -a /Applications/VSCodium.app'
 
 # Communication
-alt-d = 'exec-and-forget open -a /Applications/Discord.app'
+alt-d = 'exec-and-forget open -a /Applications/Slack.app'
+alt-shift-d = 'exec-and-forget open -a /Applications/Discord.app'
 
 # Note-taking
 alt-o = 'exec-and-forget open -a /Applications/Obsidian.app'
@@ -26,17 +27,12 @@ alt-o = 'exec-and-forget open -a /Applications/Obsidian.app'
 
 # Workspace 1: Browsers
 [[on-window-detected]]
-if.app-id = 'org.mozilla.mullvadbrowser'
+if.app-id = 'net.imput.helium'
 run = ['move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
 run = ['move-node-to-workspace 1']
-
-# Workspace 2: Code Editors (Cursor)
-[[on-window-detected]]
-if.app-id = 'com.todesktop.230313mzl4w4u92'
-run = ['move-node-to-workspace 2']
 
 # Workspace 4: Notes
 [[on-window-detected]]

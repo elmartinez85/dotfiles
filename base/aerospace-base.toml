@@ -119,6 +119,13 @@ alt-s = 'exec-and-forget open -a /Applications/Slack.app'
 alt-p = 'exec-and-forget open -a /Applications/1Password.app'
 
 # ============================================
+# PROFILE-SPECIFIC APP SHORTCUTS PLACEHOLDER
+# ============================================
+# Profile-specific app shortcuts are inserted here by bootstrap
+# This must stay in [mode.main.binding] section before any other sections are defined
+# INSERTION_POINT_APP_SHORTCUTS
+
+# ============================================
 # SERVICE MODE - Advanced window operations
 # Enter with: Alt + Shift + Semicolon
 # ============================================

@@ -2,6 +2,7 @@
 # These packages are added to base/Brewfile.base for work machines
 
 # Work Applications
+cask "bruno"
 cask "espanso"
 cask "firefox@developer-edition"
 cask "google-chrome"

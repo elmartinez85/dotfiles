@@ -186,11 +186,20 @@ fi
 print_step "Step 7: Setting up AeroSpace"
 if [ -d "/Applications/AeroSpace.app" ]; then
     # Merge base AeroSpace config with profile apps
+    # Profile shortcuts are inserted at INSERTION_POINT_APP_SHORTCUTS marker
+    # Workspace assignments are appended at the end
     AEROSPACE_CONFIG="$DOTFILES_DIR/config/aerospace.toml"
-    cat "$DOTFILES_DIR/base/aerospace-base.toml" > "$AEROSPACE_CONFIG"
+    PROFILE_APPS="$DOTFILES_DIR/profiles/$PROFILE/aerospace-apps.toml"
+
+    # Extract app shortcuts (everything before workspace assignments)
+    APP_SHORTCUTS=$(sed -n '1,/^# .*WORKSPACE AUTO-ASSIGNMENTS/{ /^# .*WORKSPACE AUTO-ASSIGNMENTS/!p; }' "$PROFILE_APPS")
+    # Extract workspace assignments (everything after the marker)
+    WORKSPACE_ASSIGNMENTS=$(sed -n '/^# .*WORKSPACE AUTO-ASSIGNMENTS/,$p' "$PROFILE_APPS")
+
+    # Insert app shortcuts at placeholder and append workspace assignments
+    sed "/# INSERTION_POINT_APP_SHORTCUTS/r /dev/stdin" "$DOTFILES_DIR/base/aerospace-base.toml" <<< "$APP_SHORTCUTS" > "$AEROSPACE_CONFIG"
     echo "" >> "$AEROSPACE_CONFIG"
-    echo "# Profile-specific app shortcuts and assignments ($PROFILE)" >> "$AEROSPACE_CONFIG"
-    cat "$DOTFILES_DIR/profiles/$PROFILE/aerospace-apps.toml" >> "$AEROSPACE_CONFIG"
+    echo "$WORKSPACE_ASSIGNMENTS" >> "$AEROSPACE_CONFIG"
 
     create_symlink "$AEROSPACE_CONFIG" "$HOME/.aerospace.toml"
     print_success "AeroSpace configuration created for $PROFILE profile"

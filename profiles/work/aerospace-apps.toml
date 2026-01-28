@@ -4,8 +4,8 @@
 # ============================================
 # WORK APP SHORTCUTS
 # ============================================
-
-[mode.main.binding]
+# Note: These bindings continue the [mode.main.binding] section from base config
+# Do NOT include [mode.main.binding] header here - TOML doesn't allow redefinition
 
 # Browsers
 alt-b = 'exec-and-forget open -a /Applications/Firefox\ Developer\ Edition.app'
@@ -13,6 +13,9 @@ alt-shift-b = 'exec-and-forget open -a /Applications/Google\ Chrome.app'
 
 # Text expansion
 alt-e = 'exec-and-forget open -a /Applications/Espanso.app'
+
+# API testing
+alt-r = 'exec-and-forget open -a /Applications/Bruno.app'
 
 # ============================================
 # WORK WORKSPACE AUTO-ASSIGNMENTS
@@ -27,5 +30,7 @@ run = ['move-node-to-workspace 1']
 if.app-id = 'com.google.Chrome'
 run = ['move-node-to-workspace 1']
 
-# Note: Cursor, Discord, Mullvad, and Obsidian are not installed in work profile
-# VSCodium and Slack auto-assignments are in base config
+# Workspace 6: API Testing
+[[on-window-detected]]
+if.app-id = 'com.usebruno.app'
+run = ['move-node-to-workspace 6']
