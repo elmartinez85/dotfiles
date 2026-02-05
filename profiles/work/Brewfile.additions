@@ -6,6 +6,7 @@ cask "bruno"
 cask "espanso"
 cask "firefox@developer-edition"
 cask "google-chrome"
+cask "helium-browser"
 
 # Work-specific tools (uncomment if needed)
 # cask "docker"
