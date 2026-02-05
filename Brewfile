@@ -1,9 +1,8 @@
-# Brewfile - Homebrew package management
-# Install with: brew bundle --file=~/dotfiles/Brewfile
+# Brewfile.base - Shared packages for all profiles
+# These packages are installed regardless of personal or work profile
 
 # CLI Tools
 brew "bat"
-brew "chezmoi"
 brew "curl"
 brew "eza"  # Modern replacement for ls with icons and git integration
 brew "fd"  # Modern replacement for find (fast, user-friendly)
@@ -23,8 +22,9 @@ brew "tree"
 brew "wget"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
+brew "awscli"  # AWS CLI (configs are profile-specific, not committed)
 
-# Cask Applications
+# Cask Applications - Shared
 cask "1password"
 cask "1password-cli"
 cask "aerospace"
@@ -32,12 +32,7 @@ cask "aerospace"
 # Taps for specialized formulae
 tap "FelixKratz/formulae"
 brew "borders"  # JankyBorders - visual focus indicators for AeroSpace
-cask "calibre"
-cask "cursor"
-cask "discord"
-cask "helium-browser"
-cask "mullvad-browser"
-cask "obsidian"
+
 cask "pearcleaner"
 cask "rectangle"
 cask "slack"
@@ -46,3 +41,15 @@ cask "vscodium"
 # Fonts
 cask "font-fira-code"
 cask "font-fira-code-nerd-font"
+
+# Profile-specific additions (personal)
+# Brewfile.additions (Personal Profile)
+# These packages are added to base/Brewfile.base for personal machines
+
+# Personal Applications
+cask "calibre"
+cask "cursor"
+cask "discord"
+cask "helium-browser"
+cask "mullvad-browser"
+cask "obsidian"

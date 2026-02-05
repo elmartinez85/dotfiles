@@ -29,7 +29,10 @@
       "Bash(do echo \"=== $app ===\")",
       "Bash(done)",
       "Bash(rm:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git reset:*)",
+      "Read(//Users/elmartinez85/**)",
+      "Bash(brew list:*)"
     ]
   }
 }

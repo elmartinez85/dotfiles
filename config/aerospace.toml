@@ -1,5 +1,5 @@
-# AeroSpace Configuration
-# Place this file at: ~/.aerospace.toml
+# AeroSpace Base Configuration
+# This is merged with profile-specific app shortcuts
 # Documentation: https://github.com/nikitabobko/AeroSpace
 
 # Start AeroSpace at login
@@ -102,31 +102,52 @@ alt-shift-equal = 'resize smart +50'
 alt-shift-semicolon = 'mode service'
 
 # ============================================
-# APP LAUNCHER SHORTCUTS
-# Quickly open applications with Alt + letter
+# SHARED APP SHORTCUTS
+# Apps that exist in both personal and work profiles
 # ============================================
 
-# Browsers
-alt-b = 'exec-and-forget open -a /Applications/Mullvad\ Browser.app'
-alt-shift-b = 'exec-and-forget open -a /Applications/Safari.app'
-
-# Code editors
-alt-c = 'exec-and-forget open -a /Applications/Cursor.app'
+# Code editor (VSCodium - available in both profiles)
 alt-v = 'exec-and-forget open -a /Applications/VSCodium.app'
 
-# Terminal (uncomment the one you use)
-# alt-t = 'exec-and-forget open -a /Applications/Ghostty.app'
+# Terminal
 alt-t = 'exec-and-forget open -a /System/Applications/Utilities/Terminal.app'
 
-# Communication
+# Communication (Slack - available in both profiles)
 alt-s = 'exec-and-forget open -a /Applications/Slack.app'
-alt-d = 'exec-and-forget open -a /Applications/Discord.app'
-
-# Note-taking & Knowledge
-alt-o = 'exec-and-forget open -a /Applications/Obsidian.app'
 
 # Utilities
 alt-p = 'exec-and-forget open -a /Applications/1Password.app'
+
+# ============================================
+# PROFILE-SPECIFIC APP SHORTCUTS PLACEHOLDER
+# ============================================
+# Profile-specific app shortcuts are inserted here by bootstrap
+# This must stay in [mode.main.binding] section before any other sections are defined
+# INSERTION_POINT_APP_SHORTCUTS
+# Personal Profile - AeroSpace App Shortcuts
+# These are appended to base/aerospace-base.toml
+
+# ============================================
+# PERSONAL APP SHORTCUTS
+# ============================================
+# Note: These bindings continue the [mode.main.binding] section from base config
+# Do NOT include [mode.main.binding] header here - TOML doesn't allow redefinition
+
+# Browsers
+alt-b = 'exec-and-forget open -a /Applications/Helium.app'
+alt-shift-b = 'exec-and-forget open -a /Applications/Safari.app'
+
+# Code editors
+alt-c = 'exec-and-forget open -a /Applications/VSCodium.app'
+
+# Communication
+alt-d = 'exec-and-forget open -a /Applications/Slack.app'
+alt-shift-d = 'exec-and-forget open -a /Applications/Discord.app'
+
+# Note-taking
+alt-o = 'exec-and-forget open -a /Applications/Obsidian.app'
+
+# ============================================
 
 # ============================================
 # SERVICE MODE - Advanced window operations
@@ -154,56 +175,44 @@ alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 
 # ============================================
-# WORKSPACE AUTO-ASSIGNMENTS
-# Automatically send apps to specific workspaces
+# SHARED WORKSPACE AUTO-ASSIGNMENTS
 # ============================================
-
-# Workspace 1: Browsers & Web
-[[on-window-detected]]
-if.app-id = 'org.mozilla.mullvadbrowser'
-run = ['move-node-to-workspace 1']
-
-[[on-window-detected]]
-if.app-id = 'com.apple.Safari'
-run = ['move-node-to-workspace 1']
 
 # Workspace 2: Code Editors
 [[on-window-detected]]
 if.app-id = 'com.vscodium'
 run = ['move-node-to-workspace 2']
 
-[[on-window-detected]]
-if.app-id = 'com.todesktop.230313mzl4w4u92'  # Cursor (verify this bundle ID)
-run = ['move-node-to-workspace 2']
-
-# Workspace 3: Terminal
-# Uncomment if you want terminal on its own workspace
-# [[on-window-detected]]
-# if.app-id = 'com.apple.Terminal'
-# run = ['move-node-to-workspace 3']
-
-# Workspace 4: Notes & Knowledge Management
-[[on-window-detected]]
-if.app-id = 'md.obsidian'
-run = ['move-node-to-workspace 4']
-
-# Workspace 5: Communication
+# Workspace 5: Communication (Slack)
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = ['move-node-to-workspace 5']
 
+# ============================================
+# PROFILE-SPECIFIC CONFIGURATIONS
+# ============================================
+# App shortcuts and workspace assignments specific to each profile
+# are appended from profiles/{personal,work}/aerospace-apps.toml
+# during bootstrap.
+
+# PERSONAL WORKSPACE AUTO-ASSIGNMENTS
+# ============================================
+
+# Workspace 1: Browsers
+[[on-window-detected]]
+if.app-id = 'net.imput.helium'
+run = ['move-node-to-workspace 1']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = ['move-node-to-workspace 1']
+
+# Workspace 4: Notes
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = ['move-node-to-workspace 4']
+
+# Workspace 5: Communication (Discord)
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = ['move-node-to-workspace 5']
-
-# ============================================
-# NOTES & CUSTOMIZATION
-# ============================================
-#
-# To find an app's bundle ID, run:
-#   osascript -e 'id of app "AppName"'
-#
-# Or check running apps with AeroSpace:
-#   aerospace list-windows --all
-#
-# Customize app shortcuts and workspace assignments above to match your workflow!
