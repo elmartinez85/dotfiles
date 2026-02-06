@@ -24,13 +24,14 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "awscli"  # AWS CLI (configs are profile-specific, not committed)
 
+# Taps for specialized formulae
+tap "nikitabobko/tap"  # AeroSpace window manager
+tap "FelixKratz/formulae"  # JankyBorders
+
 # Cask Applications - Shared
 cask "1password"
 cask "1password-cli"
 cask "aerospace"
-
-# Taps for specialized formulae
-tap "FelixKratz/formulae"
 brew "borders"  # JankyBorders - visual focus indicators for AeroSpace
 
 cask "pearcleaner"
