@@ -50,6 +50,102 @@ print_step() {
     echo ""
 }
 
+# Pre-flight validation
+validate_dotfiles_structure() {
+    local profile=$1
+    local dotfiles_dir=$2
+    local missing_files=()
+
+    print_step "Pre-flight Validation"
+    print_info "Checking dotfiles repository structure..."
+
+    # Check base directory exists
+    if [ ! -d "$dotfiles_dir/base" ]; then
+        missing_files+=("base/ directory")
+    fi
+
+    # Check required base files
+    local base_files=(
+        "base/.zshrc"
+        "base/.zsh_aliases"
+        "base/.zsh_functions"
+        "base/.gitconfig"
+        "base/.gitignore_global"
+        "base/Brewfile.base"
+        "base/starship.toml"
+        "base/aerospace-base.toml"
+    )
+
+    for file in "${base_files[@]}"; do
+        if [ ! -f "$dotfiles_dir/$file" ]; then
+            missing_files+=("$file")
+        fi
+    done
+
+    # Check profiles directory exists
+    if [ ! -d "$dotfiles_dir/profiles" ]; then
+        missing_files+=("profiles/ directory")
+    fi
+
+    # Check profile-specific directory exists
+    if [ ! -d "$dotfiles_dir/profiles/$profile" ]; then
+        missing_files+=("profiles/$profile/ directory")
+    fi
+
+    # Check required profile files
+    local profile_files=(
+        "profiles/$profile/.gitconfig"
+        "profiles/$profile/Brewfile.additions"
+        "profiles/$profile/ssh_config.additions"
+        "profiles/$profile/aerospace-apps.toml"
+        "profiles/$profile/AWS_CONFIG_README.md"
+    )
+
+    for file in "${profile_files[@]}"; do
+        if [ ! -f "$dotfiles_dir/$file" ]; then
+            missing_files+=("$file")
+        fi
+    done
+
+    # Check work profile specific files
+    if [[ "$profile" == "work" ]]; then
+        if [ ! -d "$dotfiles_dir/base/espanso" ]; then
+            missing_files+=("base/espanso/ directory")
+        fi
+        if [ ! -d "$dotfiles_dir/profiles/work/espanso" ]; then
+            missing_files+=("profiles/work/espanso/ directory")
+        fi
+    fi
+
+    # Check config directory
+    if [ ! -d "$dotfiles_dir/config" ]; then
+        missing_files+=("config/ directory")
+    fi
+
+    # Report results
+    if [ ${#missing_files[@]} -gt 0 ]; then
+        print_error "Dotfiles repository structure is incomplete!"
+        echo ""
+        echo "Missing required files/directories:"
+        for file in "${missing_files[@]}"; do
+            echo "  - $file"
+        done
+        echo ""
+        print_info "This could mean:"
+        echo "  1. The repository was not cloned completely"
+        echo "  2. You're running the script from the wrong directory"
+        echo "  3. The repository is corrupted or on the wrong branch"
+        echo ""
+        print_info "Current directory: $(pwd)"
+        print_info "Detected dotfiles directory: $dotfiles_dir"
+        echo ""
+        return 1
+    fi
+
+    print_success "All required files found!"
+    return 0
+}
+
 # Create symlink helper
 create_symlink() {
     local source=$1
@@ -93,8 +189,13 @@ if [[ "$PROFILE" != "personal" && "$PROFILE" != "work" ]]; then
     exit 1
 fi
 
-# Set up directories
-DOTFILES_DIR="$HOME/Documents/Repositories/dotfiles"
+# Set up directories - auto-detect script location
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Validate repository structure before proceeding
+if ! validate_dotfiles_structure "$PROFILE" "$DOTFILES_DIR"; then
+    exit 1
+fi
 
 print_step "Dotfiles Setup - Profile: $PROFILE"
 print_info "Dotfiles directory: $DOTFILES_DIR"

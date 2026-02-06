@@ -26,15 +26,19 @@ This dotfiles repository now supports **two profiles**:
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/dotfiles.git ~/Documents/Repositories/dotfiles
-cd ~/Documents/Repositories/dotfiles
+# Clone the repository (can be anywhere, not just ~/Documents/Repositories/dotfiles)
+git clone https://github.com/yourusername/dotfiles.git ~/path/to/dotfiles
+cd ~/path/to/dotfiles
 
 # Run bootstrap with your chosen profile
 ./bootstrap.sh --profile personal  # For personal machine
 # OR
 ./bootstrap.sh --profile work      # For work machine
 ```
+
+**Note**: The bootstrap script auto-detects its location, so you can clone the repository anywhere you like.
+
+The script includes **pre-flight validation** that checks for all required files before making any system changes. If files are missing, you'll get a clear report of what's needed.
 
 ### Post-Installation
 
