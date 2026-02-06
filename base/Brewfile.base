@@ -32,7 +32,7 @@ tap "FelixKratz/formulae"  # JankyBorders
 cask "1password"
 cask "1password-cli"
 cask "nikitabobko/tap/aerospace"  # Tiling window manager (requires full tap path)
-brew "borders"  # JankyBorders - visual focus indicators for AeroSpace
+brew "felixkratz/formulae/borders"  # JankyBorders - visual focus indicators for AeroSpace
 
 cask "pearcleaner"
 cask "rectangle"
