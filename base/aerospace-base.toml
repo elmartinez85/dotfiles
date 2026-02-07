@@ -4,29 +4,24 @@
 
 # Start AeroSpace at login
 start-at-login = true
-
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
-
 # Mouse follows focus when focused monitor changes
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-
+on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
 # Automatically unhide macOS hidden apps (disable accidental cmd-h)
 automatically-unhide-macos-hidden-apps = true
-
 # Visual focus indicators using JankyBorders
 # JankyBorders draws colored borders around the focused window
 # Color format: 0xAARRGGBB (alpha, red, green, blue in hexadecimal)
 # Active: Cyan/Aqua (highly visible) | Inactive: Dark Slate Cyan (subtle, same hue)
 after-startup-command = [
-    'exec-and-forget borders active_color=0xff00FFFF inactive_color=0xff2D4F5C width=10.0'
+  "exec-and-forget borders active_color=0xff00FFFF inactive_color=0xff2D4F5C width=10.0"
 ]
-
 # Default layout settings
 accordion-padding = 0
-default-root-container-layout = 'tiles'
-default-root-container-orientation = 'auto'
+default-root-container-layout = "tiles"
+default-root-container-orientation = "auto"
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*)
 [gaps]
@@ -39,120 +34,112 @@ outer.right = 8
 
 # Key mapping preset (qwerty or dvorak)
 [key-mapping]
-preset = 'qwerty'
+preset = "qwerty"
 
 # ============================================
 # MAIN MODE - Primary keybindings
 # ============================================
 [mode.main.binding]
-
 # Focus windows using Vim-style navigation (Alt + h/j/k/l)
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
-
+alt-h = "focus left"
+alt-j = "focus down"
+alt-k = "focus up"
+alt-l = "focus right"
 # Move windows (Alt + Shift + h/j/k/l)
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
-
+alt-shift-h = "move left"
+alt-shift-j = "move down"
+alt-shift-k = "move up"
+alt-shift-l = "move right"
 # Alternative: Move windows with arrow keys (Alt + Shift + arrows)
-alt-shift-left = 'move left'
-alt-shift-down = 'move down'
-alt-shift-up = 'move up'
-alt-shift-right = 'move right'
-
+alt-shift-left = "move left"
+alt-shift-down = "move down"
+alt-shift-up = "move up"
+alt-shift-right = "move right"
 # Switch between workspaces (Alt + number)
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
-
+alt-1 = "workspace 1"
+alt-2 = "workspace 2"
+alt-3 = "workspace 3"
+alt-4 = "workspace 4"
+alt-5 = "workspace 5"
+alt-6 = "workspace 6"
+alt-7 = "workspace 7"
+alt-8 = "workspace 8"
+alt-9 = "workspace 9"
 # Move window to workspace (Alt + Shift + number)
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-
+alt-shift-1 = "move-node-to-workspace 1"
+alt-shift-2 = "move-node-to-workspace 2"
+alt-shift-3 = "move-node-to-workspace 3"
+alt-shift-4 = "move-node-to-workspace 4"
+alt-shift-5 = "move-node-to-workspace 5"
+alt-shift-6 = "move-node-to-workspace 6"
+alt-shift-7 = "move-node-to-workspace 7"
+alt-shift-8 = "move-node-to-workspace 8"
+alt-shift-9 = "move-node-to-workspace 9"
 # Layout management (Alt + letter)
-alt-e = 'layout tiles horizontal vertical'  # Default tiling
-alt-comma = 'layout accordion horizontal vertical'  # Accordion layout
-alt-f = 'fullscreen'  # Toggle fullscreen
-
+alt-e = "layout tiles horizontal vertical"  # Default tiling
+alt-comma = "layout accordion horizontal vertical"  # Accordion layout
+alt-f = "fullscreen"  # Toggle fullscreen
 # Workspace navigation
-alt-tab = 'workspace-back-and-forth'  # Toggle between last two workspaces
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'  # Move workspace to next monitor
-
+alt-tab = "workspace-back-and-forth"  # Toggle between last two workspaces
+alt-shift-tab = "move-workspace-to-monitor --wrap-around next"  # Move workspace to next monitor
 # Resize windows
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
-
+alt-shift-minus = "resize smart -50"
+alt-shift-equal = "resize smart +50"
 # Enter service mode for advanced operations (Alt + Shift + Semicolon)
-alt-shift-semicolon = 'mode service'
-
+alt-shift-semicolon = "mode service"
 # ============================================
 # SHARED APP SHORTCUTS
 # Apps that exist in both personal and work profiles
 # ============================================
-
 # Code editor (VSCodium - available in both profiles)
-alt-v = 'exec-and-forget open -a /Applications/VSCodium.app'
-
+alt-v = "exec-and-forget open -a /Applications/VSCodium.app"
 # Terminal
-alt-a = 'exec-and-forget open -a '/Applications/Alacritty.app'
-
+alt-a = "exec-and-forget open -a /Applications/Alacritty.app"
 # Communication (Slack - available in both profiles)
-alt-s = 'exec-and-forget open -a /Applications/Slack.app'
-
+alt-s = "exec-and-forget open -a /Applications/Slack.app"
 # Utilities
-alt-p = 'exec-and-forget open -a /Applications/1Password.app'
-
+alt-p = "exec-and-forget open -a /Applications/1Password.app"
 # ============================================
 # PROFILE-SPECIFIC APP SHORTCUTS PLACEHOLDER
 # ============================================
 # Profile-specific app shortcuts are inserted here by bootstrap
 # This must stay in [mode.main.binding] section before any other sections are defined
 # INSERTION_POINT_APP_SHORTCUTS
-
 # Terminal
-alt-t = 'exec-and-forget open -a /opt/homebrew/bin/alacritty'
+alt-t = "exec-and-forget open -a /opt/homebrew/bin/alacritty"
 
 # ============================================
 # SERVICE MODE - Advanced window operations
 # Enter with: Alt + Shift + Semicolon
 # ============================================
 [mode.service.binding]
-
 # Exit service mode
-esc = ['reload-config', 'mode main']  # Reload config and return to main mode
-
+esc = ["reload-config", "mode main"]  # Reload config and return to main mode
 # Layout operations
-r = ['flatten-workspace-tree', 'mode main']  # Reset layout (flatten containers)
-f = ['layout floating tiling', 'mode main']  # Toggle between floating and tiling
-t = ['exec-and-forget /Users/elmartinez85/Documents/Repositories/dotfiles/scripts/aerospace-tile-all.sh', 'mode main']  # Force all windows to tile
-
+r = [
+  "flatten-workspace-tree",
+  "mode main"
+]  # Reset layout (flatten containers)
+f = [
+  "layout floating tiling",
+  "mode main"
+]  # Toggle between floating and tiling
+t = [
+  "exec-and-forget /Users/elmartinez85/Documents/Repositories/dotfiles/scripts/aerospace-tile-all.sh",
+  "mode main"
+]  # Force all windows to tile
 # Window management
-backspace = ['close-all-windows-but-current', 'mode main']  # Close all windows except focused
-b = ['balance-sizes', 'mode main']  # Balance all window sizes
-
+backspace = [
+  "close-all-windows-but-current",
+  "mode main"
+]  # Close all windows except focused
+b = ["balance-sizes", "mode main"]  # Balance all window sizes
 # Join windows (advanced container management)
 # These combine windows into the same container
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
+alt-shift-h = ["join-with left", "mode main"]
+alt-shift-j = ["join-with down", "mode main"]
+alt-shift-k = ["join-with up", "mode main"]
+alt-shift-l = ["join-with right", "mode main"]
 
 # ============================================
 # SHARED WORKSPACE AUTO-ASSIGNMENTS
@@ -160,13 +147,13 @@ alt-shift-l = ['join-with right', 'mode main']
 
 # Workspace 2: Code Editors
 [[on-window-detected]]
-if.app-id = 'com.vscodium'
-run = ['move-node-to-workspace 2']
+if.app-id = "com.vscodium"
+run = ["move-node-to-workspace 2"]
 
 # Workspace 5: Communication (Slack)
 [[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-run = ['move-node-to-workspace 5']
+if.app-id = "com.tinyspeck.slackmacgap"
+run = ["move-node-to-workspace 5"]
 
 # ============================================
 # PROFILE-SPECIFIC CONFIGURATIONS
