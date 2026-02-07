@@ -18,8 +18,9 @@ automatically-unhide-macos-hidden-apps = true
 # Visual focus indicators using JankyBorders
 # JankyBorders draws colored borders around the focused window
 # Color format: 0xAARRGGBB (alpha, red, green, blue in hexadecimal)
+# Active: Cyan/Aqua (highly visible) | Inactive: Dark Slate Cyan (subtle, same hue)
 after-startup-command = [
-    'exec-and-forget borders active_color=0xffFFB86C inactive_color=0xff44475A width=4.0'
+    'exec-and-forget borders active_color=0xff00FFFF inactive_color=0xff2D4F5C width=10.0'
 ]
 
 # Default layout settings
@@ -110,7 +111,7 @@ alt-shift-semicolon = 'mode service'
 alt-v = 'exec-and-forget open -a /Applications/VSCodium.app'
 
 # Terminal
-alt-t = 'exec-and-forget open -a /System/Applications/Utilities/Terminal.app'
+alt-a = 'exec-and-forget open -a '/Applications/Alacritty.app'
 
 # Communication (Slack - available in both profiles)
 alt-s = 'exec-and-forget open -a /Applications/Slack.app'
@@ -124,6 +125,9 @@ alt-p = 'exec-and-forget open -a /Applications/1Password.app'
 # Profile-specific app shortcuts are inserted here by bootstrap
 # This must stay in [mode.main.binding] section before any other sections are defined
 # INSERTION_POINT_APP_SHORTCUTS
+
+# Terminal
+alt-t = 'exec-and-forget open -a /opt/homebrew/bin/alacritty'
 
 # ============================================
 # SERVICE MODE - Advanced window operations
