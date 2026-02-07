@@ -107,15 +107,15 @@ fi
 
 # User configuration
 # Load custom aliases
-if [ -f "$DOTFILES/config/.zsh_aliases" ]; then
-    source "$DOTFILES/config/.zsh_aliases"
+if [ -f "$DOTFILES/base/.zsh_aliases" ]; then
+    source "$DOTFILES/base/.zsh_aliases"
 fi
 
 # Load custom functions
-if [ -f "$DOTFILES/config/.zsh_functions" ]; then
-    source "$DOTFILES/config/.zsh_functions"
+if [ -f "$DOTFILES/base/.zsh_functions" ]; then
+    source "$DOTFILES/base/.zsh_functions"
 fi
 
 # Initialize Starship prompt
-# Configuration file: ~/.config/starship.toml (symlinked from $DOTFILES/config/starship.toml)
+# Configuration file: ~/.config/starship.toml (symlinked from $DOTFILES/base/starship.toml)
 eval "$(starship init zsh)"
