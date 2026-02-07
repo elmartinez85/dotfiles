@@ -11,6 +11,7 @@ brew "fzf"
 brew "gh"
 brew "git"
 brew "jq"
+brew "neovim"  # Hyperextensible Vim-based text editor
 brew "nvm"  # Node version manager (install node via: nvm install node)
 brew "openssh"
 brew "python@3.14"
