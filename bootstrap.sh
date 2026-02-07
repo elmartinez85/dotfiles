@@ -163,6 +163,106 @@ create_symlink() {
     print_success "Symlinked: $target → $source"
 }
 
+# System requirements check
+check_system_requirements() {
+    print_step "System Requirements Check"
+    print_info "Validating system prerequisites..."
+
+    local requirements_met=true
+
+    # Check 1: macOS
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+        print_error "This script only works on macOS"
+        print_info "Detected OS: $OSTYPE"
+        return 1
+    fi
+    print_success "Running on macOS"
+
+    # Check 2: macOS version (require 12.0+)
+    local macos_version=$(sw_vers -productVersion)
+    local macos_major=$(echo "$macos_version" | cut -d. -f1)
+    print_info "macOS version: $macos_version"
+
+    if [[ $macos_major -lt 12 ]]; then
+        print_error "macOS 12.0 (Monterey) or higher required"
+        return 1
+    fi
+    print_success "macOS version compatible"
+
+    # Check 3: Xcode Command Line Tools
+    if ! xcode-select -p &> /dev/null; then
+        print_warning "Xcode Command Line Tools not installed"
+        print_info "These are required for git, make, and other build tools"
+        echo ""
+        read -p "Install Xcode Command Line Tools now? [Y/n] " -n 1 -r
+        echo ""
+
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            print_info "Starting Xcode Command Line Tools installation..."
+            xcode-select --install
+            echo ""
+            print_warning "Please complete the installation dialog, then run this script again"
+            return 1
+        else
+            print_error "Xcode Command Line Tools required to continue"
+            return 1
+        fi
+    fi
+    print_success "Xcode Command Line Tools installed"
+
+    # Check 4: Internet connectivity
+    if ! ping -c 1 -W 2 google.com &> /dev/null; then
+        print_warning "No internet connection detected"
+        print_info "Internet is required to download Homebrew and packages"
+        echo ""
+        read -p "Continue anyway? [y/N] " -n 1 -r
+        echo ""
+
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Please connect to the internet and try again"
+            return 1
+        fi
+        print_warning "Continuing without internet (installation may fail)"
+    else
+        print_success "Internet connection available"
+    fi
+
+    # Check 5: Disk space (need at least 5GB)
+    local available_space=$(df -g / | tail -1 | awk '{print $4}')
+    print_info "Available disk space: ${available_space}GB"
+
+    if [[ $available_space -lt 5 ]]; then
+        print_error "Insufficient disk space (need at least 5GB free)"
+        print_info "Please free up disk space and try again"
+        return 1
+    fi
+    print_success "Sufficient disk space available"
+
+    # Check 6: 1Password SSH agent (optional but recommended)
+    local onepassword_socket="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    if [ ! -S "$onepassword_socket" ]; then
+        print_warning "1Password SSH agent not detected"
+        print_info "SSH agent path: $onepassword_socket"
+        print_info "SSH key management will not work without 1Password"
+        echo ""
+        read -p "Continue without 1Password? [y/N] " -n 1 -r
+        echo ""
+
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Please install and configure 1Password, then try again"
+            print_info "Download: https://1password.com/downloads/mac/"
+            return 1
+        fi
+        print_warning "Continuing without 1Password (SSH keys will need manual setup)"
+    else
+        print_success "1Password SSH agent detected"
+    fi
+
+    echo ""
+    print_success "All system requirements validated!"
+    return 0
+}
+
 # Parse arguments
 PROFILE=""
 while [[ $# -gt 0 ]]; do
@@ -191,6 +291,11 @@ fi
 
 # Set up directories - auto-detect script location
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Check system requirements before proceeding
+if ! check_system_requirements; then
+    exit 1
+fi
 
 # Validate repository structure before proceeding
 if ! validate_dotfiles_structure "$PROFILE" "$DOTFILES_DIR"; then

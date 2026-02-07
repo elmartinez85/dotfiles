@@ -19,9 +19,12 @@ This dotfiles repository now supports **two profiles**:
 ## 📋 Quick Start
 
 ### Prerequisites
-- macOS (tested on macOS Sonoma+)
-- Command Line Tools: `xcode-select --install`
-- 1Password installed (for SSH key management)
+The bootstrap script automatically checks for these requirements:
+- macOS 12.0 (Monterey) or higher
+- Xcode Command Line Tools (script will offer to install if missing)
+- Internet connection
+- At least 5GB free disk space
+- 1Password (optional, for SSH key management via SSH agent)
 
 ### Installation
 
@@ -38,7 +41,12 @@ cd ~/path/to/dotfiles
 
 **Note**: The bootstrap script auto-detects its location, so you can clone the repository anywhere you like.
 
-The script includes **pre-flight validation** that checks for all required files before making any system changes. If files are missing, you'll get a clear report of what's needed.
+The script includes:
+- **System requirements check** - Validates macOS version, Xcode CLT, disk space, and internet
+- **Pre-flight validation** - Checks for all required files before making any system changes
+- **Oh My Zsh installation** - Automatically installed if not present
+
+If any requirements are missing, you'll get clear instructions on what's needed.
 
 ### Post-Installation
 
