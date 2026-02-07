@@ -12,6 +12,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Error and warning tracking
+ERRORS=()
+WARNINGS=()
+
 # Cleanup on error
 cleanup_on_error() {
     exit_code=$?
@@ -48,6 +52,49 @@ print_step() {
     echo "  $1"
     echo "========================================="
     echo ""
+}
+
+# Error tracking helpers
+add_error() {
+    ERRORS+=("$1")
+    print_error "$1"
+}
+
+add_warning() {
+    WARNINGS+=("$1")
+    print_warning "$1"
+}
+
+# Print final summary
+print_summary() {
+    echo ""
+    echo "========================================="
+    echo "  Installation Summary"
+    echo "========================================="
+    echo ""
+
+    if [ ${#WARNINGS[@]} -gt 0 ]; then
+        print_warning "Completed with ${#WARNINGS[@]} warning(s):"
+        for warning in "${WARNINGS[@]}"; do
+            echo "  ⚠ $warning"
+        done
+        echo ""
+    fi
+
+    if [ ${#ERRORS[@]} -gt 0 ]; then
+        print_error "Completed with ${#ERRORS[@]} error(s):"
+        for error in "${ERRORS[@]}"; do
+            echo "  ✗ $error"
+        done
+        echo ""
+        return 1
+    fi
+
+    if [ ${#WARNINGS[@]} -eq 0 ] && [ ${#ERRORS[@]} -eq 0 ]; then
+        print_success "Installation completed successfully with no issues!"
+    fi
+
+    return 0
 }
 
 # Pre-flight validation
@@ -339,8 +386,37 @@ echo "# Profile-specific additions ($PROFILE)" >> "$MERGED_BREWFILE"
 cat "$DOTFILES_DIR/profiles/$PROFILE/Brewfile.additions" >> "$MERGED_BREWFILE"
 
 print_info "Installing packages..."
-brew bundle --file="$MERGED_BREWFILE"
-print_success "All packages installed"
+if brew bundle --file="$MERGED_BREWFILE"; then
+    print_success "All packages installed"
+else
+    add_warning "Some Homebrew packages failed to install"
+    print_info "You can retry with: brew bundle --file=$MERGED_BREWFILE"
+    echo ""
+    read -p "Continue with configuration anyway? [Y/n] " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
+        print_error "Installation aborted by user"
+        exit 1
+    fi
+fi
+
+# Step 2.1: Validate critical tools were installed
+print_info "Validating critical tools..."
+CRITICAL_TOOLS=("git" "zsh" "starship" "fzf" "bat" "eza" "rg" "nvim")
+local missing_tools=()
+
+for tool in "${CRITICAL_TOOLS[@]}"; do
+    if ! command -v "$tool" &> /dev/null; then
+        missing_tools+=("$tool")
+    fi
+done
+
+if [ ${#missing_tools[@]} -gt 0 ]; then
+    add_warning "Some critical tools were not installed: ${missing_tools[*]}"
+    print_info "These tools are required for full functionality"
+else
+    print_success "All critical tools validated"
+fi
 
 # Step 2.5: Install Oh My Zsh
 print_step "Step 2.5: Installing Oh My Zsh"
@@ -474,19 +550,38 @@ print_step "Step 10: Installing VSCodium extensions"
 if command -v codium &> /dev/null; then
     if [ -f "$DOTFILES_DIR/config/vscodium-extensions.txt" ]; then
         print_info "Installing VSCodium extensions..."
+        local failed_extensions=0
+        local total_extensions=$(wc -l < "$DOTFILES_DIR/config/vscodium-extensions.txt")
+
         while IFS= read -r extension; do
-            codium --install-extension "$extension" 2>/dev/null || print_warning "Failed to install: $extension"
+            # Skip empty lines and comments
+            [[ -z "$extension" || "$extension" =~ ^# ]] && continue
+
+            if codium --install-extension "$extension" 2>&1 | grep -q "successfully installed\|already installed"; then
+                print_success "Installed: $extension"
+            else
+                add_warning "Failed to install VSCodium extension: $extension"
+                ((failed_extensions++))
+            fi
         done < "$DOTFILES_DIR/config/vscodium-extensions.txt"
-        print_success "VSCodium extensions installed"
+
+        if [ $failed_extensions -eq 0 ]; then
+            print_success "All VSCodium extensions installed successfully"
+        else
+            print_warning "Installed $(( total_extensions - failed_extensions ))/$total_extensions extensions"
+        fi
     fi
 
     # Symlink settings
     VSCODIUM_USER_DIR="$HOME/Library/Application Support/VSCodium/User"
     if [ -d "$VSCODIUM_USER_DIR" ]; then
         create_symlink "$DOTFILES_DIR/config/vscodium-settings.json" "$VSCODIUM_USER_DIR/settings.json"
+    else
+        add_warning "VSCodium User directory not found, settings not symlinked"
+        print_info "Launch VSCodium once to create the directory, then re-run bootstrap"
     fi
 else
-    print_warning "VSCodium not found, skipping extensions"
+    add_warning "VSCodium not found, skipping extensions"
 fi
 
 # Step 11: macOS defaults
@@ -536,5 +631,11 @@ echo "  7. Restart AeroSpace to apply window manager config"
 echo ""
 
 print_info "To switch profiles later, run: ./bootstrap.sh --profile [personal|work]"
+
+# Print final summary of errors and warnings
+echo ""
+if ! print_summary; then
+    exit 1
+fi
 
 trap - EXIT
