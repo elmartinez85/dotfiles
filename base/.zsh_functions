@@ -202,6 +202,24 @@ npminit() {
     npm init -y
 }
 
+nvm() {
+  unset -f nvm node npm
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
+  nvm "$@"
+}
+
+node() {
+  unset -f nvm node npm
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
+  node "$@"
+}
+
+npm() {
+  unset -f nvm node npm
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
+  npm "$@"
+}
+
 # ============================================
 # Python Functions
 # ============================================
@@ -221,4 +239,17 @@ vact() {
     else
         echo "No virtual environment found"
     fi
+}
+
+# rclone with fzf
+rcfz() {
+  local remote="${1:?Usage: rcfz <remote:path>}"
+  local base="${remote%/}"   # strip trailing slash if provided
+
+  # Build preview command with base expanded now (so fzf only needs to replace {})
+   local preview_cmd="rclone cat ${(q)base}/{} | bat --color=always --file-name {}"
+
+  rclone ls "$base" \
+    | awk '{print $2}' \
+    | fzf --preview "$preview_cmd"
 }
