@@ -5,6 +5,7 @@
 	editor = codium --wait
 	autocrlf = input
 	excludesfile = ~/.gitignore_global
+	pager = delta
 
 [pull]
 	rebase = false
@@ -20,7 +21,7 @@
 	colorMoved = zebra
 
 [merge]
-	conflictstyle = diff3
+	conflictStyle = zdiff3
 
 [alias]
 	# Short commands
@@ -49,3 +50,7 @@
 # Include profile-specific user configuration (name, email, etc.)
 [include]
 	path = ~/.gitconfig.profile
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
