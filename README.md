@@ -60,8 +60,10 @@ If any requirements are missing, you'll get clear instructions on what's needed.
 ## 📦 What's Included
 
 ### Shared Base (Both Profiles)
-- **CLI Tools**: bat, eza, fd, fzf, ripgrep, starship, gh, jq, awscli
-- **Applications**: 1Password, AeroSpace, VSCodium, Slack, Rectangle
+- **CLI Tools**: bat, eza, fd, fzf, ripgrep, starship, gh, jq, awscli, tmux, neovim
+- **Applications**: 1Password, AeroSpace, VSCodium, Slack, Rectangle, Alacritty
+- **Shell**: Zsh with Oh My Zsh, custom functions for tmux, AWS, process management, and system info
+- **Fonts**: JetBrains Mono Nerd Font (for icons in terminal/editor)
 
 ### 🏠 Personal Profile Additions
 - **Apps**: Cursor, Discord, Mullvad Browser, Obsidian, Calibre
@@ -80,8 +82,10 @@ If any requirements are missing, you'll get clear instructions on what's needed.
 dotfiles/
 ├── base/                      # Shared configs (90%)
 │   ├── Brewfile.base
-│   ├── .zshrc, .zsh_aliases
+│   ├── .zshrc, .zsh_aliases, .zsh_functions
 │   ├── .gitconfig, starship.toml
+│   ├── .tmux.conf            # Tmux with vim bindings
+│   ├── alacritty.toml        # Terminal emulator config
 │   └── aerospace-base.toml
 │
 ├── profiles/
@@ -90,7 +94,7 @@ dotfiles/
 │
 ├── config/                   # Generated merged configs
 ├── scripts/                  # Helper scripts
-├── bootstrap.sh              # Main installer
+├── bootstrap.sh              # Main installer with update/reinstall modes
 └── README.md
 ```
 
@@ -107,13 +111,58 @@ Full reference: [aerospace-keybindings-reference.md](aerospace-keybindings-refer
 
 ---
 
-## 🔄 Switching Profiles
+## 🧰 Helpful Shell Functions
+
+The dotfiles include custom shell functions in `.zsh_functions`:
+
+### Tmux Management
+- `ts <name>` - Smart session manager (create or attach to tmux session)
+- `tsl` - List all tmux sessions
+- `tk <name>` - Kill tmux session by name
+- `tka` - Kill all sessions except current
+
+### Process Management
+- `pk <name>` - Find and interactively kill processes by name
+- `topmem [n]` - Show top N processes by memory usage (default 10)
+- `topcpu [n]` - Show top N processes by CPU usage (default 10)
+
+### System Information
+- `sysinfo` - Comprehensive system info dashboard (OS, CPU, memory)
+- `ports` - Show all listening TCP ports (requires sudo)
+- `myports` - Show your listening TCP ports (no sudo needed)
+
+### AWS Helpers
+- `awsp [profile]` - Switch AWS profile with validation
+- `awsc` - Clear AWS profile (use default)
+- `whoami-aws` - Show current AWS identity
+- `awsls` - List all AWS profiles with account info
+- `s3ls` - Quick S3 bucket list
+
+### Zsh Maintenance
+- `zsh-fix-completions` - Remove broken completion symlinks
+
+---
+
+## 🔄 Update vs Reinstall Modes
+
+When you run bootstrap on an already-installed profile, you'll be prompted to choose:
+
+- **Update Mode** (fast ~30 seconds) - Only updates packages and refreshes configs
+- **Reinstall Mode** (slow ~10 minutes) - Complete reinstall of everything
 
 ```bash
 cd ~/Documents/Repositories/dotfiles
+./bootstrap.sh --profile personal  # Will prompt: Update or Reinstall?
+```
+
+### Switching Profiles
+
+```bash
 ./bootstrap.sh --profile work     # Switch to work
 ./bootstrap.sh --profile personal # Switch to personal
 ```
+
+Note: Profile switching will install the new profile alongside the old one. Full profile cleanup is planned for a future update.
 
 ---
 
