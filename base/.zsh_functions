@@ -253,3 +253,317 @@ rcfz() {
     | awk '{print $2}' \
     | fzf --preview "$preview_cmd"
 }
+
+# ============================================
+# Tmux Functions
+# ============================================
+
+# Tmux session manager - create or attach to named session
+# Usage: ts <session-name>
+ts() {
+    if [ -z "$1" ]; then
+        echo "Usage: ts <session-name>"
+        echo ""
+        echo "Available sessions:"
+        tmux list-sessions 2>/dev/null || echo "  (no active sessions)"
+        return 1
+    fi
+
+    local session_name="$1"
+
+    # Check if tmux is installed
+    if ! command -v tmux &> /dev/null; then
+        echo "Error: tmux is not installed"
+        echo "Install with: brew install tmux"
+        return 1
+    fi
+
+    # Check if we're already inside a tmux session
+    if [ -n "$TMUX" ]; then
+        # We're inside tmux, switch to the session
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+            tmux switch-client -t "$session_name"
+            echo "Switched to session: $session_name"
+        else
+            tmux new-session -d -s "$session_name"
+            tmux switch-client -t "$session_name"
+            echo "Created and switched to session: $session_name"
+        fi
+    else
+        # We're outside tmux, attach or create
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+            tmux attach-session -t "$session_name"
+        else
+            tmux new-session -s "$session_name"
+        fi
+    fi
+}
+
+# List all tmux sessions with details
+tsl() {
+    if ! command -v tmux &> /dev/null; then
+        echo "Error: tmux is not installed"
+        return 1
+    fi
+    tmux list-sessions 2>/dev/null || echo "No active tmux sessions"
+}
+
+# Kill a tmux session by name
+tk() {
+    if ! command -v tmux &> /dev/null; then
+        echo "Error: tmux is not installed"
+        return 1
+    fi
+
+    if [ -z "$1" ]; then
+        echo "Usage: tk <session-name>"
+        echo ""
+        echo "Available sessions:"
+        tsl
+        return 1
+    fi
+
+    if tmux has-session -t "$1" 2>/dev/null; then
+        tmux kill-session -t "$1"
+        echo "Killed session: $1"
+    else
+        echo "Session not found: $1"
+        return 1
+    fi
+}
+
+# Kill all tmux sessions except current
+tka() {
+    if ! command -v tmux &> /dev/null; then
+        echo "Error: tmux is not installed"
+        return 1
+    fi
+
+    if [ -z "$TMUX" ]; then
+        echo "Not in a tmux session. Kill all sessions? [y/N]"
+        read -r response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            tmux kill-server
+            echo "All tmux sessions killed"
+        fi
+    else
+        local current_session=$(tmux display-message -p '#S')
+        local killed_count=0
+
+        tmux list-sessions -F "#{session_name}" 2>/dev/null | while read -r session; do
+            if [ "$session" != "$current_session" ]; then
+                tmux kill-session -t "$session"
+                echo "Killed session: $session"
+                ((killed_count++))
+            fi
+        done
+
+        echo "Kept current session: $current_session"
+    fi
+}
+
+# ============================================
+# Process Management
+# ============================================
+
+# Find and kill process by name (interactive)
+pk() {
+    if [ -z "$1" ]; then
+        echo "Usage: pk <process-name>"
+        return 1
+    fi
+
+    # Find matching processes (exclude grep and this function)
+    local processes=$(ps aux | grep -i "$1" | grep -v grep | grep -v "pk $1")
+
+    if [ -z "$processes" ]; then
+        echo "No processes found matching: $1"
+        return 1
+    fi
+
+    echo "Found processes matching '$1':"
+    echo "$processes" | awk '{printf "%s\t%s\t%s\n", $2, $3, substr($0, index($0,$11))}'
+    echo ""
+    echo "Kill these processes? [y/N]"
+    read -r response
+
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+        echo "$processes" | awk '{print $2}' | xargs kill -9
+        echo "Processes killed"
+    else
+        echo "Cancelled"
+    fi
+}
+
+# Show top processes by memory usage
+topmem() {
+    local count="${1:-10}"
+    echo "Top $count processes by memory usage:"
+    ps aux | sort -nrk 4 | head -n "$count" | awk '{printf "%-8s %6s%% %6s%% %s\n", $2, $3, $4, substr($0, index($0,$11))}'
+}
+
+# Show top processes by CPU usage
+topcpu() {
+    local count="${1:-10}"
+    echo "Top $count processes by CPU usage:"
+    ps aux | sort -nrk 3 | head -n "$count" | awk '{printf "%-8s %6s%% %6s%% %s\n", $2, $3, $4, substr($0, index($0,$11))}'
+}
+
+# ============================================
+# System Information
+# ============================================
+
+# Show comprehensive system info summary
+sysinfo() {
+    echo "╔══════════════════════════════════════════╗"
+    echo "║         System Information              ║"
+    echo "╚══════════════════════════════════════════╝"
+    echo ""
+    echo "OS:           $(sw_vers -productName) $(sw_vers -productVersion) (Build $(sw_vers -buildVersion))"
+    echo "Hostname:     $(hostname)"
+    echo "Architecture: $(uname -m)"
+    echo "Kernel:       $(uname -r)"
+    echo "Uptime:       $(uptime | awk -F'up ' '{print $2}' | awk -F',' '{print $1}')"
+    echo ""
+    echo "CPU:          $(sysctl -n machdep.cpu.brand_string)"
+    echo "CPU Cores:    $(sysctl -n hw.ncpu) cores"
+    echo ""
+    echo "Memory:       $(sysctl -n hw.memsize | awk '{printf "%.2f GB\n", $1/1024/1024/1024}')"
+    echo "Memory Usage: $(vm_stat | awk '/Pages active/ {printf "%.2f GB active\n", $3 * 4096 / 1024 / 1024 / 1024}')"
+    echo ""
+    echo "Disk Usage:   $(df -h / | awk 'NR==2 {print $5 " used (" $3 " of " $2 ")"}')"
+    echo ""
+    echo "Network:"
+    if command -v ifconfig &> /dev/null; then
+        local ip=$(ipconfig getifaddr en0 2>/dev/null || echo "Not connected")
+        echo "  Local IP:   $ip"
+    fi
+    if command -v curl &> /dev/null; then
+        local public_ip=$(curl -s --max-time 2 ifconfig.me 2>/dev/null || echo "Unable to fetch")
+        echo "  Public IP:  $public_ip"
+    fi
+}
+
+# Show listening ports
+ports() {
+    echo "Listening TCP ports:"
+    echo "===================="
+    sudo lsof -iTCP -sTCP:LISTEN -n -P | awk 'NR==1 || /LISTEN/ {printf "%-20s %-8s %-10s %s\n", $1, $2, $9, $10}'
+}
+
+# Show listening ports (user-level only, no sudo)
+myports() {
+    echo "My listening TCP ports:"
+    echo "======================="
+    lsof -iTCP -sTCP:LISTEN -n -P | awk 'NR==1 || /LISTEN/ {printf "%-20s %-8s %-10s %s\n", $1, $2, $9, $10}'
+}
+
+# ============================================
+# AWS / Cloud Helpers
+# ============================================
+
+# Switch AWS profile with validation
+awsp() {
+    if [ -z "$1" ]; then
+        echo "Current AWS profile: ${AWS_PROFILE:-default}"
+        echo ""
+        echo "Available profiles:"
+
+        if [ -f ~/.aws/config ]; then
+            grep '^\[' ~/.aws/config | sed 's/\[profile \(.*\)\]/  \1/' | sed 's/\[default\]/  default/'
+        else
+            echo "  (no AWS config file found)"
+        fi
+        return 0
+    fi
+
+    # Validate profile exists
+    if [ -f ~/.aws/config ]; then
+        if grep -q "^\[profile $1\]" ~/.aws/config || [ "$1" = "default" ]; then
+            export AWS_PROFILE="$1"
+            echo "✓ Switched to AWS profile: $1"
+
+            # Try to show identity if AWS CLI is configured
+            if command -v aws &> /dev/null; then
+                echo ""
+                aws sts get-caller-identity 2>/dev/null || echo "  (unable to verify identity - check credentials)"
+            fi
+        else
+            echo "Error: Profile '$1' not found in ~/.aws/config"
+            echo ""
+            echo "Available profiles:"
+            grep '^\[' ~/.aws/config | sed 's/\[profile \(.*\)\]/  \1/' | sed 's/\[default\]/  default/'
+            return 1
+        fi
+    else
+        echo "Error: ~/.aws/config not found"
+        return 1
+    fi
+}
+
+# Clear AWS profile (use default)
+awsc() {
+    unset AWS_PROFILE
+    echo "✓ Cleared AWS profile (using default)"
+}
+
+# Show current AWS identity
+whoami-aws() {
+    if ! command -v aws &> /dev/null; then
+        echo "Error: AWS CLI not installed"
+        return 1
+    fi
+
+    echo "Current AWS Profile: ${AWS_PROFILE:-default}"
+    echo ""
+    aws sts get-caller-identity
+}
+
+# List AWS profiles with account info
+awsls() {
+    if ! command -v aws &> /dev/null; then
+        echo "Error: AWS CLI not installed"
+        return 1
+    fi
+
+    echo "AWS Profiles:"
+    echo "============="
+    echo ""
+
+    if [ -f ~/.aws/config ]; then
+        # Get all profile names
+        local profiles=$(grep '^\[' ~/.aws/config | sed 's/\[profile \(.*\)\]/\1/' | sed 's/\[default\]/default/')
+
+        for profile in $profiles; do
+            echo "Profile: $profile"
+
+            # Try to get account info
+            local old_profile=$AWS_PROFILE
+            export AWS_PROFILE=$profile
+
+            local identity=$(aws sts get-caller-identity 2>/dev/null)
+            if [ $? -eq 0 ]; then
+                echo "$identity" | jq -r '  "  Account: " + .Account + "\n  User/Role: " + .Arn' 2>/dev/null || echo "  (identity info available but jq not installed)"
+            else
+                echo "  (unable to get identity - check credentials)"
+            fi
+
+            export AWS_PROFILE=$old_profile
+            echo ""
+        done
+    else
+        echo "(no AWS config file found)"
+    fi
+}
+
+# Quick S3 bucket list
+s3ls() {
+    if ! command -v aws &> /dev/null; then
+        echo "Error: AWS CLI not installed"
+        return 1
+    fi
+
+    echo "S3 Buckets (profile: ${AWS_PROFILE:-default}):"
+    echo "=============================================="
+    aws s3 ls
+}
