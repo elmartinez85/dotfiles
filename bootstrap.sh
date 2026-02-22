@@ -670,8 +670,8 @@ if command -v codium &> /dev/null; then
     else
         if [ -f "$DOTFILES_DIR/config/vscodium-extensions.txt" ]; then
             print_info "Installing VSCodium extensions..."
-            local failed_extensions=0
-            local total_extensions=$(wc -l < "$DOTFILES_DIR/config/vscodium-extensions.txt")
+            failed_extensions=0
+            total_extensions=$(wc -l < "$DOTFILES_DIR/config/vscodium-extensions.txt")
 
             while IFS= read -r extension; do
                 # Skip empty lines and comments
