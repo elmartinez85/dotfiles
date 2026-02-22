@@ -444,21 +444,39 @@ cat "$DOTFILES_DIR/profiles/$PROFILE/Brewfile.additions" >> "$MERGED_BREWFILE"
 
 if [[ "$INSTALL_MODE" == "update" ]]; then
     print_info "UPDATE mode: Upgrading existing packages..."
-    brew update
-    brew upgrade
-    # Install any new packages from the Brewfile without reinstalling existing ones
-    if brew bundle --file="$MERGED_BREWFILE" --no-lock; then
+    print_info "This may take a few minutes. Output will be shown for transparency."
+    echo ""
+
+    # Update Homebrew
+    brew update || add_warning "Homebrew update had issues"
+
+    # Upgrade existing packages (show output)
+    echo "Upgrading packages..."
+    brew upgrade || add_warning "Some packages failed to upgrade"
+
+    # Install any new packages from the Brewfile
+    echo ""
+    echo "Checking for new packages to install..."
+    if brew bundle --file="$MERGED_BREWFILE" --no-lock --verbose; then
         print_success "Packages updated successfully"
     else
         add_warning "Some packages failed to update"
+        print_info "Check output above for specific errors"
     fi
 else
     print_info "Installing packages (mode: $INSTALL_MODE)..."
-    if brew bundle --file="$MERGED_BREWFILE"; then
-        print_success "All packages installed"
+    print_info "This may take 5-10 minutes on first install. Output will be shown for transparency."
+    echo ""
+
+    # Run brew bundle with verbose output so user can see what's happening
+    if brew bundle --file="$MERGED_BREWFILE" --verbose; then
+        echo ""
+        print_success "All packages installed successfully"
     else
+        echo ""
         add_warning "Some Homebrew packages failed to install"
-        print_info "You can retry with: brew bundle --file=$MERGED_BREWFILE"
+        print_info "Check output above for specific errors"
+        print_info "You can retry with: brew bundle --file=$MERGED_BREWFILE --verbose"
         echo ""
         read -p "Continue with configuration anyway? [Y/n] " -n 1 -r
         echo ""
@@ -470,6 +488,7 @@ else
 fi
 
 # Step 2.1: Validate critical tools were installed
+echo ""
 print_info "Validating critical tools..."
 CRITICAL_TOOLS=("git" "zsh" "starship" "fzf" "bat" "eza" "rg" "nvim")
 local missing_tools=()
@@ -477,14 +496,19 @@ local missing_tools=()
 for tool in "${CRITICAL_TOOLS[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
         missing_tools+=("$tool")
+        echo "  ✗ $tool - NOT FOUND"
+    else
+        echo "  ✓ $tool - $(command -v $tool)"
     fi
 done
 
+echo ""
 if [ ${#missing_tools[@]} -gt 0 ]; then
     add_warning "Some critical tools were not installed: ${missing_tools[*]}"
     print_info "These tools are required for full functionality"
+    print_info "You can install them manually with: brew install ${missing_tools[*]}"
 else
-    print_success "All critical tools validated"
+    print_success "All critical tools validated successfully"
 fi
 
 # Step 2.5: Install Oh My Zsh
