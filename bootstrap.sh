@@ -353,6 +353,63 @@ print_step "Dotfiles Setup - Profile: $PROFILE"
 print_info "Dotfiles directory: $DOTFILES_DIR"
 print_info "Active profile: $PROFILE"
 
+# Detect installation mode
+INSTALL_MODE="fresh"
+PREVIOUS_PROFILE=""
+
+if [ -f "$DOTFILES_DIR/.profile_active" ]; then
+    CURRENT_PROFILE=$(cat "$DOTFILES_DIR/.profile_active")
+
+    if [ "$CURRENT_PROFILE" == "$PROFILE" ]; then
+        # Same profile already installed - offer update or reinstall
+        echo ""
+        print_warning "Profile '$PROFILE' is already installed"
+        echo ""
+        echo "Choose installation mode:"
+        echo "  [u] Update     - Only update packages and refresh configs (fast, ~30 seconds)"
+        echo "  [r] Reinstall  - Complete reinstall of everything (slow, ~10 minutes)"
+        echo "  [c] Cancel     - Exit without making changes"
+        echo ""
+        read -p "Select mode [u/r/c]: " -n 1 -r
+        echo ""
+        echo ""
+
+        case $REPLY in
+            u|U)
+                INSTALL_MODE="update"
+                print_info "Running in UPDATE mode - fast refresh"
+                ;;
+            r|R)
+                INSTALL_MODE="reinstall"
+                print_info "Running in REINSTALL mode - full setup"
+                ;;
+            c|C)
+                print_info "Installation cancelled"
+                exit 0
+                ;;
+            *)
+                print_error "Invalid choice"
+                exit 1
+                ;;
+        esac
+    else
+        # Different profile - this is a profile switch
+        INSTALL_MODE="switch"
+        PREVIOUS_PROFILE="$CURRENT_PROFILE"
+        print_warning "Switching from '$PREVIOUS_PROFILE' to '$PROFILE' profile"
+        print_info "Note: Profile switching will be fully implemented in P1-1"
+        print_info "For now, this will install the new profile alongside the old one"
+        echo ""
+    fi
+else
+    # No previous installation detected
+    INSTALL_MODE="fresh"
+    print_info "Fresh installation detected"
+fi
+
+print_info "Installation mode: $INSTALL_MODE"
+echo ""
+
 # Save active profile
 echo "$PROFILE" > "$DOTFILES_DIR/.profile_active"
 print_success "Profile '$PROFILE' activated"
@@ -385,18 +442,30 @@ echo "" >> "$MERGED_BREWFILE"
 echo "# Profile-specific additions ($PROFILE)" >> "$MERGED_BREWFILE"
 cat "$DOTFILES_DIR/profiles/$PROFILE/Brewfile.additions" >> "$MERGED_BREWFILE"
 
-print_info "Installing packages..."
-if brew bundle --file="$MERGED_BREWFILE"; then
-    print_success "All packages installed"
+if [[ "$INSTALL_MODE" == "update" ]]; then
+    print_info "UPDATE mode: Upgrading existing packages..."
+    brew update
+    brew upgrade
+    # Install any new packages from the Brewfile without reinstalling existing ones
+    if brew bundle --file="$MERGED_BREWFILE" --no-lock; then
+        print_success "Packages updated successfully"
+    else
+        add_warning "Some packages failed to update"
+    fi
 else
-    add_warning "Some Homebrew packages failed to install"
-    print_info "You can retry with: brew bundle --file=$MERGED_BREWFILE"
-    echo ""
-    read -p "Continue with configuration anyway? [Y/n] " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        print_error "Installation aborted by user"
-        exit 1
+    print_info "Installing packages (mode: $INSTALL_MODE)..."
+    if brew bundle --file="$MERGED_BREWFILE"; then
+        print_success "All packages installed"
+    else
+        add_warning "Some Homebrew packages failed to install"
+        print_info "You can retry with: brew bundle --file=$MERGED_BREWFILE"
+        echo ""
+        read -p "Continue with configuration anyway? [Y/n] " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            print_error "Installation aborted by user"
+            exit 1
+        fi
     fi
 fi
 
@@ -420,13 +489,22 @@ fi
 
 # Step 2.5: Install Oh My Zsh
 print_step "Step 2.5: Installing Oh My Zsh"
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    print_info "Installing Oh My Zsh..."
-    # Install Oh My Zsh in unattended mode (no shell change prompt)
-    RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    print_success "Oh My Zsh installed"
+if [[ "$INSTALL_MODE" == "update" ]]; then
+    print_info "UPDATE mode: Skipping Oh My Zsh (already installed)"
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        print_success "Oh My Zsh verified"
+    else
+        add_warning "Oh My Zsh not found - may need reinstall"
+    fi
 else
-    print_success "Oh My Zsh already installed"
+    if [ ! -d "$HOME/.oh-my-zsh" ]; then
+        print_info "Installing Oh My Zsh..."
+        # Install Oh My Zsh in unattended mode (no shell change prompt)
+        RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+        print_success "Oh My Zsh installed"
+    else
+        print_success "Oh My Zsh already installed"
+    fi
 fi
 
 # Step 3: Setup Zsh configs
@@ -445,23 +523,29 @@ print_warning "Remember to update your email in: $DOTFILES_DIR/profiles/$PROFILE
 
 # Step 5: Setup SSH config
 print_step "Step 5: Setting up SSH configuration"
-mkdir -p "$HOME/.ssh"
-chmod 700 "$HOME/.ssh"
 
-# Backup existing SSH config if it exists and is not a previous bootstrap config
-SSH_CONFIG="$HOME/.ssh/config"
-if [ -f "$SSH_CONFIG" ]; then
-    # Check if it's a bootstrap-generated config (contains our marker)
-    if ! grep -q "# SSH Configuration (Generated by bootstrap)" "$SSH_CONFIG"; then
-        # This is a user's custom config, back it up
-        BACKUP_FILE="${SSH_CONFIG}.backup-$(date +%Y%m%d-%H%M%S)"
-        cp "$SSH_CONFIG" "$BACKUP_FILE"
-        print_warning "Existing SSH config backed up to: $BACKUP_FILE"
+if [[ "$INSTALL_MODE" == "update" ]]; then
+    print_info "UPDATE mode: Refreshing SSH profile symlink only"
+    create_symlink "$DOTFILES_DIR/profiles/$PROFILE/ssh_config.additions" "$HOME/.ssh/config.profile"
+    print_success "SSH profile configuration updated"
+else
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+
+    # Backup existing SSH config if it exists and is not a previous bootstrap config
+    SSH_CONFIG="$HOME/.ssh/config"
+    if [ -f "$SSH_CONFIG" ]; then
+        # Check if it's a bootstrap-generated config (contains our marker)
+        if ! grep -q "# SSH Configuration (Generated by bootstrap)" "$SSH_CONFIG"; then
+            # This is a user's custom config, back it up
+            BACKUP_FILE="${SSH_CONFIG}.backup-$(date +%Y%m%d-%H%M%S)"
+            cp "$SSH_CONFIG" "$BACKUP_FILE"
+            print_warning "Existing SSH config backed up to: $BACKUP_FILE"
+        fi
     fi
-fi
 
-# Create SSH config with profile include
-cat > "$SSH_CONFIG" << 'EOF'
+    # Create SSH config with profile include
+    cat > "$SSH_CONFIG" << 'EOF'
 # SSH Configuration (Generated by bootstrap)
 # Base settings
 Host *
@@ -472,9 +556,10 @@ Host *
 Include ~/.ssh/config.profile
 EOF
 
-create_symlink "$DOTFILES_DIR/profiles/$PROFILE/ssh_config.additions" "$HOME/.ssh/config.profile"
-chmod 600 "$SSH_CONFIG"
-print_success "SSH configuration created"
+    create_symlink "$DOTFILES_DIR/profiles/$PROFILE/ssh_config.additions" "$HOME/.ssh/config.profile"
+    chmod 600 "$SSH_CONFIG"
+    print_success "SSH configuration created"
+fi
 
 # Step 6: Setup Starship prompt
 print_step "Step 6: Setting up Starship prompt"
@@ -513,15 +598,22 @@ fi
 
 # Step 8: Setup fzf
 print_step "Step 8: Setting up fzf"
-if command -v fzf &> /dev/null; then
-    if [ ! -f "$HOME/.fzf.zsh" ]; then
-        "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc
-        print_success "fzf shell integration installed"
-    else
-        print_success "fzf already configured"
+if [[ "$INSTALL_MODE" == "update" ]]; then
+    print_info "UPDATE mode: Skipping fzf setup (already configured)"
+    if [ -f "$HOME/.fzf.zsh" ]; then
+        print_success "fzf verified"
     fi
 else
-    print_warning "fzf not installed, skipping configuration"
+    if command -v fzf &> /dev/null; then
+        if [ ! -f "$HOME/.fzf.zsh" ]; then
+            "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc
+            print_success "fzf shell integration installed"
+        else
+            print_success "fzf already configured"
+        fi
+    else
+        print_warning "fzf not installed, skipping configuration"
+    fi
 fi
 
 # Step 9: Setup Espanso (work profile only)
@@ -548,31 +640,36 @@ fi
 # Step 10: Setup VSCodium extensions
 print_step "Step 10: Installing VSCodium extensions"
 if command -v codium &> /dev/null; then
-    if [ -f "$DOTFILES_DIR/config/vscodium-extensions.txt" ]; then
-        print_info "Installing VSCodium extensions..."
-        local failed_extensions=0
-        local total_extensions=$(wc -l < "$DOTFILES_DIR/config/vscodium-extensions.txt")
+    if [[ "$INSTALL_MODE" == "update" ]]; then
+        print_info "UPDATE mode: Skipping VSCodium extensions (already installed)"
+        print_info "To update extensions manually, use: codium --list-extensions | xargs -L 1 codium --install-extension"
+    else
+        if [ -f "$DOTFILES_DIR/config/vscodium-extensions.txt" ]; then
+            print_info "Installing VSCodium extensions..."
+            local failed_extensions=0
+            local total_extensions=$(wc -l < "$DOTFILES_DIR/config/vscodium-extensions.txt")
 
-        while IFS= read -r extension; do
-            # Skip empty lines and comments
-            [[ -z "$extension" || "$extension" =~ ^# ]] && continue
+            while IFS= read -r extension; do
+                # Skip empty lines and comments
+                [[ -z "$extension" || "$extension" =~ ^# ]] && continue
 
-            if codium --install-extension "$extension" 2>&1 | grep -q "successfully installed\|already installed"; then
-                print_success "Installed: $extension"
+                if codium --install-extension "$extension" 2>&1 | grep -q "successfully installed\|already installed"; then
+                    print_success "Installed: $extension"
+                else
+                    add_warning "Failed to install VSCodium extension: $extension"
+                    ((failed_extensions++))
+                fi
+            done < "$DOTFILES_DIR/config/vscodium-extensions.txt"
+
+            if [ $failed_extensions -eq 0 ]; then
+                print_success "All VSCodium extensions installed successfully"
             else
-                add_warning "Failed to install VSCodium extension: $extension"
-                ((failed_extensions++))
+                print_warning "Installed $(( total_extensions - failed_extensions ))/$total_extensions extensions"
             fi
-        done < "$DOTFILES_DIR/config/vscodium-extensions.txt"
-
-        if [ $failed_extensions -eq 0 ]; then
-            print_success "All VSCodium extensions installed successfully"
-        else
-            print_warning "Installed $(( total_extensions - failed_extensions ))/$total_extensions extensions"
         fi
     fi
 
-    # Symlink settings
+    # Symlink settings (always refresh)
     VSCODIUM_USER_DIR="$HOME/Library/Application Support/VSCodium/User"
     if [ -d "$VSCODIUM_USER_DIR" ]; then
         create_symlink "$DOTFILES_DIR/config/vscodium-settings.json" "$VSCODIUM_USER_DIR/settings.json"
@@ -586,29 +683,34 @@ fi
 
 # Step 11: macOS defaults
 print_step "Step 11: Configuring macOS defaults"
-print_info "Setting macOS preferences..."
 
-# Finder: show all filename extensions
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+if [[ "$INSTALL_MODE" == "fresh" ]]; then
+    print_info "Setting macOS preferences..."
 
-# Finder: show hidden files by default
-defaults write com.apple.finder AppleShowAllFiles -bool true
+    # Finder: show all filename extensions
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
-# Finder: show path bar
-defaults write com.apple.finder ShowPathbar -bool true
+    # Finder: show hidden files by default
+    defaults write com.apple.finder AppleShowAllFiles -bool true
 
-# Disable the "Are you sure you want to open this application?" dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
+    # Finder: show path bar
+    defaults write com.apple.finder ShowPathbar -bool true
 
-# Trackpad: enable tap to click
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+    # Disable the "Are you sure you want to open this application?" dialog
+    defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# Expand save panel by default
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+    # Trackpad: enable tap to click
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+    defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-print_success "macOS defaults configured"
+    # Expand save panel by default
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+    print_success "macOS defaults configured"
+else
+    print_info "Skipping macOS defaults (mode: $INSTALL_MODE, already configured)"
+fi
 
 # Final steps
 print_step "Installation Complete!"
