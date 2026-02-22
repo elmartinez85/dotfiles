@@ -183,17 +183,118 @@ Edit `profiles/{personal,work}/aerospace-apps.toml`
 
 ## 🔒 Security
 
-- AWS credentials, SSH keys, API tokens are **NOT committed**
-- Use 1Password SSH agent for key management
-- Profile-specific git emails via `[include]`
+### What's Protected
+
+This repository is designed with security in mind:
+
+- ✅ **No secrets in git** - AWS credentials, SSH keys, API tokens are never committed
+- ✅ **Comprehensive .gitignore** - Prevents accidental commits of sensitive files
+- ✅ **1Password SSH agent** - SSH keys managed securely, never stored on disk
+- ✅ **Environment variables** - Sensitive config loaded from `.env_secrets` (not tracked)
+- ✅ **Profile isolation** - Personal and work credentials kept separate
+
+### Before Using This Repository
+
+**⚠️ Important: Update these files with your information:**
+
+1. **Git Configuration** - Set your email and name:
+
+   **Option A: Edit profile files directly** (simple, but you'll have local changes)
+   ```bash
+   vim profiles/personal/.gitconfig  # Change CHANGEME@example.com to your email
+   vim profiles/work/.gitconfig      # Change eduardo.martinez@company.com to your email
+   ```
+
+   **Option B: Use .gitconfig.local** (recommended, no tracked file changes)
+   ```bash
+   # Create ~/.gitconfig.local (not tracked in git)
+   cat > ~/.gitconfig.local <<'EOF'
+[user]
+	name = Your Actual Name
+	email = your.actual.email@example.com
+EOF
+   # This overrides the placeholder email from the profile
+   ```
+
+2. **SSH Configuration** - Customize for your servers:
+   ```bash
+   # Edit these files with your actual hosts:
+   vim profiles/personal/ssh_config.additions
+   vim profiles/work/ssh_config.additions
+   ```
+
+3. **AWS Configuration** - Add your AWS profiles:
+   ```bash
+   # Follow instructions in:
+   profiles/personal/AWS_CONFIG_README.md
+   profiles/work/AWS_CONFIG_README.md
+   ```
+
+### Installation Security Considerations
+
+**Curl Piping Risks:**
+
+The bootstrap script downloads and executes installation scripts from official sources:
+- **Homebrew**: `https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh`
+- **Oh My Zsh**: `https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh`
+
+While these are widely-used, trusted sources, piping curl to shell (`curl | sh`) carries inherent risk. If these repositories were compromised, malicious code could execute on your machine.
+
+**Mitigation options:**
+1. Review the scripts before running: Visit the URLs above and inspect the code
+2. Download and inspect before executing:
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > /tmp/brew-install.sh
+   less /tmp/brew-install.sh  # Review the script
+   bash /tmp/brew-install.sh  # Execute if satisfied
+   ```
+3. Trust the community - these scripts are used by millions of developers daily
+
+### Never Commit These Files
+
+The `.gitignore` prevents committing sensitive files, but be extra careful with:
+- `.env`, `.env.*` - Environment variables with secrets
+- `.aws/credentials`, `.aws/config` - AWS access keys
+- `*.pem`, `*.key` - SSH/TLS private keys
+- `.zsh_history` - May contain sensitive commands
+- `Brewfile.lock.json` - Contains package versions (can leak info about your setup)
+
+### Recommended: Use Git Hooks for Secret Detection
+
+Prevent accidental secret commits with automated scanning tools:
+
+**git-secrets** (Prevention - blocks commits before they happen)
+```bash
+brew install git-secrets
+cd ~/dotfiles
+git secrets --install          # Install git hooks
+git secrets --register-aws     # Add AWS credential patterns
+git secrets --add 'password.*=.*'  # Add custom patterns
+git secrets --scan             # Scan current repo
+```
+
+**trufflehog** (Detection - finds secrets in history)
+```bash
+brew install trufflehog
+trufflehog git file://~/dotfiles --only-verified
+```
+
+Both tools help catch secrets before they reach GitHub, protecting your accounts and infrastructure.
 
 ---
 
 ## 📚 Resources
 
-- [AeroSpace Docs](https://github.com/nikitabobko/AeroSpace)
-- [Starship Config](https://starship.rs/config/)
-- [Espanso Docs](https://espanso.org/docs/)
+### Tool Documentation
+- [AeroSpace Docs](https://github.com/nikitabobko/AeroSpace) - Tiling window manager
+- [Starship Config](https://starship.rs/config/) - Custom prompt theme
+- [Espanso Docs](https://espanso.org/docs/) - Text expansion
+- [Tmux Guide](https://github.com/tmux/tmux/wiki) - Terminal multiplexer
+
+### Security Tools
+- [git-secrets](https://github.com/awslabs/git-secrets) - Prevent committing secrets
+- [trufflehog](https://github.com/trufflesecurity/trufflehog) - Find secrets in git history
+- [1Password SSH Agent](https://developer.1password.com/docs/ssh/) - Secure SSH key management
 
 ---
 
