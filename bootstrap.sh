@@ -491,7 +491,7 @@ fi
 echo ""
 print_info "Validating critical tools..."
 CRITICAL_TOOLS=("git" "zsh" "starship" "fzf" "bat" "eza" "rg" "nvim")
-local missing_tools=()
+missing_tools=()
 
 for tool in "${CRITICAL_TOOLS[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
