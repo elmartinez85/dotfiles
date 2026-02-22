@@ -141,7 +141,7 @@ validate_dotfiles_structure() {
 
     # Check required profile files
     local profile_files=(
-        "profiles/$profile/.gitconfig"
+        "profiles/$profile/.gitconfig.example"  # Changed from .gitconfig (now user creates it)
         "profiles/$profile/Brewfile.additions"
         "profiles/$profile/ssh_config.additions"
         "profiles/$profile/aerospace-apps.toml"
@@ -548,11 +548,23 @@ fi
 
 # Step 4: Setup Git config
 print_step "Step 4: Setting up Git configuration"
+
+# Check if profile gitconfig exists, if not create from example
+if [ ! -f "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig" ]; then
+    if [ -f "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig.example" ]; then
+        print_warning "Profile gitconfig not found. Creating from example..."
+        cp "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig.example" "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig"
+        print_warning "⚠️  IMPORTANT: Edit $DOTFILES_DIR/profiles/$PROFILE/.gitconfig"
+        print_warning "   Change CHANGEME to your actual name and email!"
+    else
+        print_error "Neither .gitconfig nor .gitconfig.example found for profile: $PROFILE"
+        ERRORS+=("Missing gitconfig for profile: $PROFILE")
+    fi
+fi
+
 create_symlink "$DOTFILES_DIR/base/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig" "$HOME/.gitconfig.profile"
 create_symlink "$DOTFILES_DIR/base/.gitignore_global" "$HOME/.gitignore_global"
-
-print_warning "Remember to update your email in: $DOTFILES_DIR/profiles/$PROFILE/.gitconfig"
 
 # Step 5: Setup SSH config
 print_step "Step 5: Setting up SSH configuration"
@@ -761,7 +773,12 @@ print_success "Profile '$PROFILE' has been set up successfully!"
 
 echo ""
 echo "Next steps:"
-echo "  1. Update your email in: $DOTFILES_DIR/profiles/$PROFILE/.gitconfig"
+if [ -f "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig" ] && grep -q "CHANGEME" "$DOTFILES_DIR/profiles/$PROFILE/.gitconfig" 2>/dev/null; then
+    echo "  1. ⚠️  REQUIRED: Update your email in: $DOTFILES_DIR/profiles/$PROFILE/.gitconfig"
+    echo "     (Replace CHANGEME with your actual name and email)"
+else
+    echo "  1. ✓ Git config set up"
+fi
 echo "  2. Configure AWS CLI (see: $DOTFILES_DIR/profiles/$PROFILE/AWS_CONFIG_README.md)"
 if [[ "$PROFILE" == "personal" ]]; then
     echo "  3. Customize SSH hosts in: $DOTFILES_DIR/profiles/personal/ssh_config.additions"

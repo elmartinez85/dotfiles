@@ -1,0 +1,16 @@
+# Work Git Configuration
+# This file is symlinked to ~/.gitconfig.profile when using work profile
+#
+# SETUP INSTRUCTIONS:
+# 1. Copy this file: cp profiles/work/.gitconfig.example profiles/work/.gitconfig
+# 2. Edit the copy: vim profiles/work/.gitconfig
+# 3. Replace CHANGEME with your actual name and work email
+
+[user]
+	name = CHANGEME  # Your full name
+	email = CHANGEME@company.com  # Your work email
+	# signingkey = YOUR_GPG_KEY_IF_YOU_USE_GPG
+
+# Work-specific settings (if any)
+# [url "git@github.company.com:"]
+# 	insteadOf = https://github.company.com/

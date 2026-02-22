@@ -115,6 +115,10 @@ config/ssh_config.local
 .zshrc.local
 .gitconfig.local
 
+# Profile-specific gitconfigs (contain personal info)
+profiles/personal/.gitconfig
+profiles/work/.gitconfig
+
 # ============================================
 # Cache & Runtime Files
 # ============================================

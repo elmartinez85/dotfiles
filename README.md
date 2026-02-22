@@ -198,23 +198,15 @@ This repository is designed with security in mind:
 **⚠️ Important: Update these files with your information:**
 
 1. **Git Configuration** - Set your email and name:
-
-   **Option A: Edit profile files directly** (simple, but you'll have local changes)
    ```bash
-   vim profiles/personal/.gitconfig  # Change CHANGEME@example.com to your email
-   vim profiles/work/.gitconfig      # Change eduardo.martinez@company.com to your email
+   # Copy the example file for your profile
+   cp profiles/personal/.gitconfig.example profiles/personal/.gitconfig
+
+   # Edit with your actual information
+   vim profiles/personal/.gitconfig  # Change CHANGEME to your name and email
    ```
 
-   **Option B: Use .gitconfig.local** (recommended, no tracked file changes)
-   ```bash
-   # Create ~/.gitconfig.local (not tracked in git)
-   cat > ~/.gitconfig.local <<'EOF'
-[user]
-	name = Your Actual Name
-	email = your.actual.email@example.com
-EOF
-   # This overrides the placeholder email from the profile
-   ```
+   The `.gitconfig` file is not tracked in git, so your personal info stays private.
 
 2. **SSH Configuration** - Customize for your servers:
    ```bash

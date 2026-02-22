@@ -50,11 +50,6 @@
 # Include profile-specific user configuration (name, email, etc.)
 [include]
 	path = ~/.gitconfig.profile
-
-# Include local overrides (not tracked in git)
-# Use this to override email/name without modifying tracked files
-[include]
-	path = ~/.gitconfig.local
 [interactive]
 	diffFilter = delta --color-only
 [delta]

@@ -1,0 +1,16 @@
+# Personal Git Configuration
+# This file is symlinked to ~/.gitconfig.profile when using personal profile
+#
+# SETUP INSTRUCTIONS:
+# 1. Copy this file: cp profiles/personal/.gitconfig.example profiles/personal/.gitconfig
+# 2. Edit the copy: vim profiles/personal/.gitconfig
+# 3. Replace CHANGEME with your actual name and email
+
+[user]
+	name = CHANGEME  # Your full name
+	email = CHANGEME@example.com  # Your personal email
+	# signingkey = YOUR_GPG_KEY_IF_YOU_USE_GPG
+
+# Personal-specific settings (if any)
+# [url "git@github.com:your-personal-username/"]
+# 	insteadOf = https://github.com/your-personal-username/
