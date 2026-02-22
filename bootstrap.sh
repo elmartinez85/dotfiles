@@ -595,6 +595,16 @@ else
     print_warning "Starship not installed, skipping configuration"
 fi
 
+# Step 6.5: Setup Alacritty terminal
+print_step "Step 6.5: Setting up Alacritty terminal"
+if command -v alacritty &> /dev/null; then
+    mkdir -p "$HOME/.config/alacritty"
+    create_symlink "$DOTFILES_DIR/base/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+    print_success "Alacritty configuration symlinked"
+else
+    print_warning "Alacritty not installed, skipping configuration"
+fi
+
 # Step 7: Setup AeroSpace window manager
 print_step "Step 7: Setting up AeroSpace"
 if [ -d "/Applications/AeroSpace.app" ]; then
