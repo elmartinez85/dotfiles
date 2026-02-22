@@ -567,3 +567,35 @@ s3ls() {
     echo "=============================================="
     aws s3 ls
 }
+
+# ============================================
+# Zsh Maintenance
+# ============================================
+
+# Fix broken zsh completions (remove broken symlinks)
+zsh-fix-completions() {
+    echo "Checking for broken completion symlinks..."
+    local broken_count=0
+
+    for comp_dir in /opt/homebrew/share/zsh/site-functions /usr/local/share/zsh/site-functions; do
+        if [ -d "$comp_dir" ]; then
+            echo "Checking: $comp_dir"
+
+            for file in "$comp_dir"/_*; do
+                if [ -L "$file" ] && [ ! -e "$file" ]; then
+                    echo "  ✗ Broken: $(basename "$file") -> $(readlink "$file")"
+                    rm -f "$file"
+                    ((broken_count++))
+                fi
+            done
+        fi
+    done
+
+    if [ $broken_count -eq 0 ]; then
+        echo "✓ No broken completion symlinks found"
+    else
+        echo ""
+        echo "✓ Removed $broken_count broken completion symlink(s)"
+        echo "  Run 'refresh' to reload your shell"
+    fi
+}
