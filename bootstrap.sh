@@ -537,6 +537,15 @@ create_symlink "$DOTFILES_DIR/base/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/base/.zsh_aliases" "$HOME/.zsh_aliases"
 create_symlink "$DOTFILES_DIR/base/.zsh_functions" "$HOME/.zsh_functions"
 
+# Step 3.5: Setup Tmux config
+print_step "Step 3.5: Setting up Tmux configuration"
+if command -v tmux &> /dev/null; then
+    create_symlink "$DOTFILES_DIR/base/.tmux.conf" "$HOME/.tmux.conf"
+    print_success "Tmux configuration symlinked"
+else
+    print_warning "Tmux not installed, skipping configuration"
+fi
+
 # Step 4: Setup Git config
 print_step "Step 4: Setting up Git configuration"
 create_symlink "$DOTFILES_DIR/base/.gitconfig" "$HOME/.gitconfig"
