@@ -191,10 +191,11 @@ unfocused_hollow = true
 # Hide cursor when typing
 hide_when_typing = true
 
-# URL launcher
-[mouse.bindings]
-# Click on URLs with Cmd+Click
-{ mouse = "Middle", mods = "Command", action = "PasteSelection" }
+# Mouse bindings
+[[mouse.bindings]]
+mouse = "Middle"
+mods = "Command"
+action = "PasteSelection"
 
 # ============================================
 # Hints (URL detection)
