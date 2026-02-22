@@ -264,7 +264,7 @@ action = "ClearHistory"
 [[keyboard.bindings]]
 key = "F"
 mods = "Command"
-chars = "\x06"  # Forward search in tmux
+chars = "\\x06"  # Forward search in tmux (Ctrl-F)
 
 [[keyboard.bindings]]
 key = "Plus"
