@@ -10,6 +10,7 @@ brew "ffmpeg"
 brew "fzf"
 brew "gh"
 brew "git"
+brew "git-delta"
 brew "jq"
 brew "nvm"  # Node version manager (install node via: nvm install node)
 brew "openssh"
@@ -41,6 +42,7 @@ cask "vscodium"
 # Fonts
 cask "font-fira-code"
 cask "font-fira-code-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
 
 # Profile-specific additions (personal)
 # Brewfile.additions (Personal Profile)

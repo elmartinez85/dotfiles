@@ -23,7 +23,7 @@ if [[ -f "/opt/homebrew/bin/brew" ]]; then
 fi
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"/
 
 # Disable Oh My Zsh theme (using Starship instead)
 ZSH_THEME=""
@@ -35,9 +35,6 @@ plugins=(
   git
   brew
   macos
-  node
-  npm
-  nvm
   python
   pip
   pyenv
@@ -47,10 +44,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# NVM configuration
+# nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # pyenv configuration
 if command -v pyenv >/dev/null 2>&1; then

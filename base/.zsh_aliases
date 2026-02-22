@@ -141,10 +141,10 @@ alias du="du -h"
 # Quick File Edits
 # ============================================
 
-alias zshrc="codium ~/.zshrc"
-alias aliases="codium $DOTFILES/base/.zsh_aliases"
-alias functions="codium $DOTFILES/base/.zsh_functions"
-alias gitconfig="codium ~/.gitconfig"
+alias zshrc="nvim ~/.zshrc"
+alias aliases="nvim $DOTFILES/base/.zsh_aliases"
+alias functions="nvim $DOTFILES/base/.zsh_functions"
+alias gitconfig="nvim ~/.gitconfig"
 alias nvimrc="nvim ~/.config/nvim/init.lua"
 
 # ============================================
